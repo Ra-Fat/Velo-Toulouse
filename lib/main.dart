@@ -1,10 +1,51 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'ui/app_colors.dart';
-import 'ui/shell/home_shell.dart';
+import 'data/repositories/booking/booking_repository.dart';
+import 'data/repositories/booking/booking_repository_firebase.dart';
+import 'data/repositories/booking/booking_repository_mock.dart';
+import 'data/repositories/subscription/subscription_repository.dart';
+import 'data/repositories/subscription/subscription_repository_firebase.dart';
+import 'data/repositories/subscription/subscription_repository_mock.dart';
+import 'data/repositories/user_subscription/user_subscription_repository.dart';
+import 'data/repositories/user_subscription/user_subscription_repository_firebase.dart';
+import 'data/repositories/user_subscription/user_subscription_repository_mock.dart';
+import 'ui/theme/app_colors.dart';
+import 'ui/screens/home_shell.dart';
 
-void main() {
-  runApp(const VeloToulouseApp());
+const bool _useFirebase = bool.fromEnvironment('USE_FIREBASE', defaultValue: false);
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (_useFirebase) {
+    await Firebase.initializeApp();
+  }
+
+  final SubscriptionRepository subscriptionRepository = _useFirebase
+      ? SubscriptionRepositoryFirebase()
+      : SubscriptionRepositoryMock();
+  final UserSubscriptionRepository userSubscriptionRepository = _useFirebase
+      ? UserSubscriptionRepositoryFirebase()
+      : UserSubscriptionRepositoryMock(
+          subscriptionRepository: subscriptionRepository,
+        );
+  final BookingRepository bookingRepository = _useFirebase
+      ? BookingRepositoryFirebase()
+      : BookingRepositoryMock();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<SubscriptionRepository>.value(value: subscriptionRepository),
+        Provider<UserSubscriptionRepository>.value(
+          value: userSubscriptionRepository,
+        ),
+        Provider<BookingRepository>.value(value: bookingRepository),
+      ],
+      child: const VeloToulouseApp(),
+    ),
+  );
 }
 
 class VeloToulouseApp extends StatelessWidget {

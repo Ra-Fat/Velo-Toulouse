@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/app_colors.dart';
+import 'package:project/ui/theme/app_colors.dart';
 
 class MapSearchBar extends StatelessWidget {
   const MapSearchBar({super.key});
