@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/repositories/bike/bike_repository.dart';
+import '../../data/repositories/booking/booking_repository.dart';
+import '../../data/repositories/station/station_repository.dart';
 import '../theme/app_colors.dart';
 import 'map/map_screen.dart';
 import 'map/view_model/booking_view_model.dart';
+import 'map/view_model/map_view_model.dart';
 import 'subscription/subscription_screen.dart';
-import '../../data/repositories/booking/booking_repository.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
@@ -24,11 +27,21 @@ class _HomeShellState extends State<HomeShell> {
         index: _index,
         sizing: StackFit.expand,
         children: [
-          ChangeNotifierProvider(
-            create: (context) => BookingViewModel(
-              repository: context.read<BookingRepository>(),
-              userId: '1',
-            )..load(),
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (context) => BookingViewModel(
+                  repository: context.read<BookingRepository>(),
+                  userId: '1',
+                )..load(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => MapViewModel(
+                  stationRepository: context.read<StationRepository>(),
+                  bikeRepository: context.read<BikeRepository>(),
+                )..loadStations(),
+              ),
+            ],
             child: const MapPlaceholderScreen(),
           ),
           SubscriptionFlowScreen(
