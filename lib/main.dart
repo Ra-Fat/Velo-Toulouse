@@ -2,9 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'data/repositories/bike/bike_repository.dart';
+import 'data/repositories/bike/bike_repository_firebase.dart';
+import 'data/repositories/bike/bike_repository_mock.dart';
 import 'data/repositories/booking/booking_repository.dart';
 import 'data/repositories/booking/booking_repository_firebase.dart';
 import 'data/repositories/booking/booking_repository_mock.dart';
+import 'data/repositories/station/station_repository.dart';
+import 'data/repositories/station/station_repository_firebase.dart';
+import 'data/repositories/station/station_repository_mock.dart';
 import 'data/repositories/subscription/subscription_repository.dart';
 import 'data/repositories/subscription/subscription_repository_firebase.dart';
 import 'data/repositories/subscription/subscription_repository_mock.dart';
@@ -33,6 +39,12 @@ Future<void> main() async {
   final BookingRepository bookingRepository = _useFirebase
       ? BookingRepositoryFirebase()
       : BookingRepositoryMock();
+  final StationRepository stationRepository = _useFirebase
+      ? StationRepositoryFirebase()
+      : StationRepositoryMock();
+  final BikeRepository bikeRepository = _useFirebase
+      ? BikeRepositoryFirebase()
+      : BikeRepositoryMock();
 
   runApp(
     MultiProvider(
@@ -42,6 +54,8 @@ Future<void> main() async {
           value: userSubscriptionRepository,
         ),
         Provider<BookingRepository>.value(value: bookingRepository),
+        Provider<StationRepository>.value(value: stationRepository),
+        Provider<BikeRepository>.value(value: bikeRepository),
       ],
       child: const VeloToulouseApp(),
     ),

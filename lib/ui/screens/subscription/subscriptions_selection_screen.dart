@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/ui/screens/subscription/widgets/subscription_copy.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/subscription/subscription.dart';
@@ -7,7 +8,6 @@ import '../../utils/async_value.dart';
 import 'view_model/subscription_view_model.dart';
 import 'widgets/subscription_selection/plan_card.dart';
 import 'widgets/step_progress.dart';
-import 'widgets/subscription_selection/subscription_copy.dart';
 
 String _euroPriceLabel(double euros) {
   if (euros == euros.roundToDouble()) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/ui/screens/map/view_model/map_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/repositories/bike/bike_repository.dart';
@@ -7,7 +8,6 @@ import '../../data/repositories/station/station_repository.dart';
 import '../theme/app_colors.dart';
 import 'map/map_screen.dart';
 import 'map/view_model/booking_view_model.dart';
-import 'map/view_model/map_view_model.dart';
 import 'subscription/subscription_screen.dart';
 
 class HomeShell extends StatefulWidget {
