@@ -5,6 +5,7 @@ class Booking {
     required this.bikeId,
     required this.stationId,
     required this.slotId,
+    required this.isActive,
     required this.reservedAt,
   });
 
@@ -13,5 +14,6 @@ class Booking {
   final String bikeId;
   final String stationId;
   final String slotId;
+  final bool isActive;
   final DateTime reservedAt;
 }

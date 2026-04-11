@@ -2,7 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:project/models/booking/booking_details.dart';
-import 'package:project/ui/theme/app_colors.dart';
+import 'package:project/ui/screens/map/view_model/booking_view_model.dart';
+import 'package:provider/provider.dart';
+
+import 'booking_timer_widgets/booking_timer_actions.dart';
+import 'booking_timer_widgets/booking_timer_info_card.dart';
+import 'booking_timer_widgets/booking_timer_loading_overlay.dart';
+import 'booking_timer_widgets/booking_timer_status_card.dart';
 
 class BookingTimerScreen extends StatefulWidget {
   const BookingTimerScreen({super.key, required this.details});
@@ -51,12 +57,27 @@ class _BookingTimerScreenState extends State<BookingTimerScreen> {
     return '$mm:$ss';
   }
 
-  Future<void> _cancelRide() async {}
+  Future<void> _cancelRide(BookingViewModel viewModel) async {
+    if (viewModel.state.isCreating) return;
+    final ok = await viewModel.cancelBooking(widget.details.booking.id);
+    if (!mounted) return;
+    if (!ok) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Could not cancel booking')));
+      return;
+    }
+    Navigator.of(context).popUntil((r) => r.isFirst);
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Booking cancelled')));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final expired = _remaining == Duration.zero;
+    final viewModel = context.watch<BookingViewModel>();
+    final isCancelling = viewModel.state.isCreating;
 
     return Scaffold(
       appBar: AppBar(
@@ -65,170 +86,51 @@ class _BookingTimerScreenState extends State<BookingTimerScreen> {
         foregroundColor: Colors.black87,
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 18),
-              decoration: BoxDecoration(
-                color: expired ? Colors.black12 : AppColors.primary,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    expired ? 'Reservation expired' : 'Reservation expires in',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: expired ? Colors.black54 : Colors.white70,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    _timeLabel(_remaining),
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      color: expired ? Colors.black54 : Colors.white,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            _InfoCard(
-              stationName: widget.details.stationName,
-              bikeNumber: widget.details.bikeNumber,
-              slotLabel: widget.details.slotLabel,
-            ),
-            if (expired) ...[
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.orange.shade200),
-                ),
-                child: const Text(
-                  'Your reservation window ended. You can go back to the map to book another bike.',
-                ),
-              ),
-            ],
-            const Spacer(),
-            if (!expired)
-              Row(
-                children: [
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: _cancelRide,
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Colors.grey.shade100,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                          side: BorderSide(color: Colors.grey.shade400),
-                        ),
-                      ),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: () =>
-                          Navigator.of(context).popUntil((r) => r.isFirst),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
-                      child: const Text(
-                        'Done',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            else
-              FilledButton(
-                onPressed: _cancelRide,
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.grey.shade400,
-                  foregroundColor: Colors.black87,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _InfoCard extends StatelessWidget {
-  const _InfoCard({
-    required this.stationName,
-    required this.bikeNumber,
-    required this.slotLabel,
-  });
-
-  final String stationName;
-  final String bikeNumber;
-  final String slotLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
+      body: Stack(
         children: [
-          _line('Pick-up station', stationName),
-          const SizedBox(height: 8),
-          _line('Bike', '#$bikeNumber'),
-          const SizedBox(height: 8),
-          _line('Dock slot', slotLabel),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                BookingTimerStatusCard(
+                  expired: expired,
+                  timeLabel: _timeLabel(_remaining),
+                ),
+                const SizedBox(height: 16),
+                BookingTimerInfoCard(
+                  stationName: widget.details.stationName,
+                  bikeNumber: widget.details.bikeNumber,
+                  slotLabel: widget.details.slotLabel,
+                ),
+                if (expired) ...[
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.orange.shade200),
+                    ),
+                    child: const Text(
+                      'Your reservation window ended. You can go back to the map to book another bike.',
+                    ),
+                  ),
+                ],
+                const Spacer(),
+                BookingTimerActions(
+                  expired: expired,
+                  isCancelling: isCancelling,
+                  onCancel: () => _cancelRide(viewModel),
+                  onDone: () =>
+                      Navigator.of(context).popUntil((r) => r.isFirst),
+                ),
+              ],
+            ),
+          ),
+          if (isCancelling) const BookingTimerLoadingOverlay(),
         ],
       ),
-    );
-  }
-
-  Widget _line(String label, String value) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            label,
-            style: const TextStyle(color: AppColors.textSecondary),
-          ),
-        ),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w700)),
-      ],
     );
   }
 }

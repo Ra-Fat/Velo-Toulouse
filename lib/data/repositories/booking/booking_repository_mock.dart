@@ -16,6 +16,7 @@ class BookingRepositoryMock implements BookingRepository {
       stationId: '1',
       slotId: '1',
       reservedAt: DateTime.utc(2026, 4, 5, 12, 0),
+      isActive: true,
     ),
     stationName: 'Capitole Main',
     bikeNumber: '1001',
@@ -49,6 +50,7 @@ class BookingRepositoryMock implements BookingRepository {
         bikeId: bikeId,
         stationId: stationId,
         slotId: slotId,
+        isActive: true,
         reservedAt: now,
       ),
       stationName: _stationName(stationId),
@@ -57,6 +59,31 @@ class BookingRepositoryMock implements BookingRepository {
     );
     _latestByUser[userId] = details;
     return details;
+  }
+
+  @override
+  Future<void> cancelBooking(String bookingId) async {
+    await Future<void>.delayed(artificialDelay);
+
+    for (final entry in _latestByUser.entries) {
+      if (entry.value.booking.id == bookingId) {
+        _latestByUser[entry.key] = BookingDetails(
+          booking: Booking(
+            id: entry.value.booking.id,
+            userId: entry.value.booking.userId,
+            bikeId: entry.value.booking.bikeId,
+            stationId: entry.value.booking.stationId,
+            slotId: entry.value.booking.slotId,
+            isActive: false,
+            reservedAt: entry.value.booking.reservedAt,
+          ),
+          stationName: entry.value.stationName,
+          bikeNumber: entry.value.bikeNumber,
+          slotLabel: entry.value.slotLabel,
+        );
+        break;
+      }
+    }
   }
 
   String _stationName(String stationId) {

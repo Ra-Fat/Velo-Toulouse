@@ -10,8 +10,7 @@ class BookingViewModel extends ChangeNotifier {
   BookingViewModel({
     required BookingRepository repository,
     this.userId = AppSession.userId,
-  })
-    : _repository = repository;
+  }) : _repository = repository;
 
   final BookingRepository _repository;
   final String userId;
@@ -65,6 +64,30 @@ class BookingViewModel extends ChangeNotifier {
       );
       notifyListeners();
       return null;
+    }
+  }
+
+  Future<bool> cancelBooking(String bookingId) async {
+    _state = _state.copyWith(
+      createResult: AsyncValue<BookingDetails?>.loading(),
+    );
+    notifyListeners();
+    try {
+      await _repository.cancelBooking(bookingId);
+      final result = await _repository.fetchLatestBookingDetails(userId);
+      _state = _state.copyWith(
+        details: AsyncValue<BookingDetails?>.success(result),
+        createResult: AsyncValue<BookingDetails?>.success(null),
+      );
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _state = _state.copyWith(
+        createResult: AsyncValue<BookingDetails?>.error(e),
+      );
+      notifyListeners();
+      debugPrint('Error cancelling booking: $e');
+      return false;
     }
   }
 }

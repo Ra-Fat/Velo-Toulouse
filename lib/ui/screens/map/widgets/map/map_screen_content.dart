@@ -3,7 +3,6 @@ import 'package:project/ui/screens/map/view_model/booking_view_model.dart';
 import 'package:project/ui/screens/map/view_model/map_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../../../models/bike/bike.dart';
 import '../../../../theme/app_colors.dart';
 import '../booking/booking_timer_screen.dart';
 import 'map_search_bar.dart';
@@ -14,68 +13,11 @@ import 'layers/station_sheet_layer.dart';
 class MapScreenContent extends StatelessWidget {
   const MapScreenContent({super.key});
 
-  VoidCallback _buildOnBook(BuildContext context, MapViewModel mapVm) {
-    return () {
-      final station = mapVm.selectedStation;
-      if (station == null) return;
-
-      final selectedBikeId = mapVm.state.selectedBikeId;
-      if (selectedBikeId == null) return;
-
-      final bikes = mapVm.state.bikesAtStation.data;
-      if (bikes == null) return;
-
-      Bike? selectedBike;
-      for (final bike in bikes) {
-        if (bike.id == selectedBikeId) {
-          selectedBike = bike;
-          break;
-        }
-      }
-      if (selectedBike == null) return;
-
-      final bookingVm = context.read<BookingViewModel>();
-      final nav = Navigator.of(context);
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) =>
-            const Center(child: CircularProgressIndicator()),
-      );
-
-      bookingVm
-          .createBooking(
-            bikeId: selectedBike.id,
-            stationId: station.id,
-            slotId: selectedBike.currentSlotId,
-          )
-          .then((details) {
-            nav.pop();
-            if (!context.mounted) return;
-            if (details == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Could not create booking')),
-              );
-              return;
-            }
-            nav.push<void>(
-              MaterialPageRoute<void>(
-                builder: (context) => BookingTimerScreen(details: details),
-              ),
-            );
-          })
-          .catchError((_) {
-            nav.pop();
-            if (!context.mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Could not create booking')),
-            );
-          });
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
+    final mapVm = context.watch<MapViewModel>();
+    final bookingVm = context.read<BookingViewModel>();
+
     return ColoredBox(
       color: AppColors.surfaceMuted,
       child: Stack(
@@ -84,7 +26,46 @@ class MapScreenContent extends StatelessWidget {
           const MapStackLayer(),
           const MapSearchBar(),
           StationSheetLayer(
-            onBook: _buildOnBook(context, context.watch<MapViewModel>()),
+            onBook: () async {
+              final nav = Navigator.of(context);
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false,
+                builder: (dialogContext) =>
+                    const Center(child: CircularProgressIndicator()),
+              );
+
+              try {
+                final details = await mapVm.bookSelectedBike(bookingVm);
+                if (nav.canPop()) {
+                  nav.pop();
+                }
+                if (!context.mounted) return;
+                if (details == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Could not create booking')),
+                  );
+                  return;
+                }
+                nav.push<void>(
+                  MaterialPageRoute<void>(
+                    builder: (context) =>
+                        ChangeNotifierProvider<BookingViewModel>.value(
+                          value: bookingVm,
+                          child: BookingTimerScreen(details: details),
+                        ),
+                  ),
+                );
+              } catch (_) {
+                if (nav.canPop()) {
+                  nav.pop();
+                }
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not create booking')),
+                );
+              }
+            },
             hasActiveBooking:
                 context.watch<BookingViewModel>().state.details.data != null,
           ),

@@ -70,7 +70,11 @@ class _BookingOverlay extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push<void>(
               MaterialPageRoute<void>(
-                builder: (context) => BookingTimerScreen(details: data),
+                builder: (context) =>
+                    ChangeNotifierProvider<BookingViewModel>.value(
+                      value: vm,
+                      child: BookingTimerScreen(details: data),
+                    ),
               ),
             );
           },

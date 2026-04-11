@@ -2,8 +2,10 @@ import 'package:flutter/foundation.dart';
 
 import '../../../../data/repositories/bike/bike_repository.dart';
 import '../../../../data/repositories/station/station_repository.dart';
+import '../../../../models/booking/booking_details.dart';
 import '../../../../models/bike/bike.dart';
 import '../../../../models/station/station.dart';
+import 'booking_view_model.dart';
 import '../../../states/map_state.dart';
 import '../../../../utils/async_value.dart';
 
@@ -11,8 +13,8 @@ class MapViewModel extends ChangeNotifier {
   MapViewModel({
     required StationRepository stationRepository,
     required BikeRepository bikeRepository,
-  })  : _stationRepository = stationRepository,
-        _bikeRepository = bikeRepository;
+  }) : _stationRepository = stationRepository,
+       _bikeRepository = bikeRepository;
 
   final StationRepository _stationRepository;
   final BikeRepository _bikeRepository;
@@ -33,6 +35,17 @@ class MapViewModel extends ChangeNotifier {
     if (list == null) return null;
     for (final s in list) {
       if (s.id == id) return s;
+    }
+    return null;
+  }
+
+  Bike? get selectedBike {
+    final selectedBikeId = _state.selectedBikeId;
+    if (selectedBikeId == null) return null;
+    final bikes = _state.bikesAtStation.data;
+    if (bikes == null) return null;
+    for (final bike in bikes) {
+      if (bike.id == selectedBikeId) return bike;
     }
     return null;
   }
@@ -85,8 +98,9 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final bikes =
-          await _bikeRepository.fetchAvailableBikesForStation(stationId);
+      final bikes = await _bikeRepository.fetchAvailableBikesForStation(
+        stationId,
+      );
       _state = MapState(
         stations: _state.stations,
         selectedStationId: stationId,
@@ -112,5 +126,19 @@ class MapViewModel extends ChangeNotifier {
       selectedBikeId: bikeId,
     );
     notifyListeners();
+  }
+
+  Future<BookingDetails?> bookSelectedBike(
+    BookingViewModel bookingViewModel,
+  ) async {
+    final station = selectedStation;
+    final bike = selectedBike;
+    if (station == null || bike == null) return null;
+
+    return bookingViewModel.createBooking(
+      bikeId: bike.id,
+      stationId: station.id,
+      slotId: bike.currentSlotId,
+    );
   }
 }

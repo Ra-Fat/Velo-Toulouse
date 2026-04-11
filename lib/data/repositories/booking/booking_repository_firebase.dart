@@ -41,23 +41,43 @@ class BookingRepositoryFirebase implements BookingRepository {
 
   @override
   Future<BookingDetails?> fetchLatestBookingDetails(String userId) async {
-    final snapshot = await _db
-        .collection(FirestorePaths.bookings)
-        .where(BookingDto.userIdKey, isEqualTo: userId)
-        .get();
+    try {
+      final snapshot = await _db
+          .collection(FirestorePaths.bookings)
+          .where(BookingDto.userIdKey, isEqualTo: userId)
+          .orderBy(BookingDto.reservedAtKey, descending: true)
+          .limit(1)
+          .get();
 
-    if (snapshot.docs.isEmpty) return null;
+      if (snapshot.docs.isEmpty) return null;
 
-    Booking? latest;
-    for (final doc in snapshot.docs) {
-      final booking = BookingDto.fromFirestore(doc.id, doc.data());
-      if (latest == null || booking.reservedAt.isAfter(latest.reservedAt)) {
-        latest = booking;
+      final latest = BookingDto.fromFirestore(
+        snapshot.docs.first.id,
+        snapshot.docs.first.data(),
+      );
+      if (!latest.isActive) return null;
+      return _hydrateDetails(latest);
+    } on FirebaseException catch (e) {
+      if (e.code != 'failed-precondition') rethrow;
+
+      // Fallback when composite index is not created yet.
+      final snapshot = await _db
+          .collection(FirestorePaths.bookings)
+          .where(BookingDto.userIdKey, isEqualTo: userId)
+          .get();
+
+      Booking? latest;
+      for (final doc in snapshot.docs) {
+        final booking = BookingDto.fromFirestore(doc.id, doc.data());
+        if (!booking.isActive) continue;
+        if (latest == null || booking.reservedAt.isAfter(latest.reservedAt)) {
+          latest = booking;
+        }
       }
-    }
 
-    if (latest == null) return null;
-    return _hydrateDetails(latest);
+      if (latest == null) return null;
+      return _hydrateDetails(latest);
+    }
   }
 
   @override
@@ -79,6 +99,7 @@ class BookingRepositoryFirebase implements BookingRepository {
         BookingDto.bikeIdKey: bikeId,
         BookingDto.stationIdKey: stationId,
         BookingDto.slotIdKey: slotId,
+        BookingDto.isActiveKey: true,
         BookingDto.reservedAtKey: reservedAt,
       });
     });
@@ -89,8 +110,28 @@ class BookingRepositoryFirebase implements BookingRepository {
       bikeId: bikeId,
       stationId: stationId,
       slotId: slotId,
+      isActive: true,
       reservedAt: reservedAt.toDate(),
     );
     return _hydrateDetails(booking);
+  }
+
+  @override
+  Future<void> cancelBooking(String bookingId) async {
+    final bookingRef = _db.collection(FirestorePaths.bookings).doc(bookingId);
+    final bookingSnap = await bookingRef.get();
+    if (!bookingSnap.exists) return;
+
+    final booking = BookingDto.fromFirestore(
+      bookingSnap.id,
+      bookingSnap.data()!,
+    );
+
+    await _db.runTransaction((tx) async {
+      tx.update(_db.collection(FirestorePaths.bikes).doc(booking.bikeId), {
+        'status': 'available',
+      });
+      tx.update(bookingRef, {BookingDto.isActiveKey: false});
+    });
   }
 }
