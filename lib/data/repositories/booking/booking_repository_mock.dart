@@ -2,7 +2,6 @@ import '../../../models/booking/booking.dart';
 import '../../../models/booking/booking_details.dart';
 import 'booking_repository.dart';
 
-/// Matches `lib/scripts/seed/index.js` for user "1".
 class BookingRepositoryMock implements BookingRepository {
   BookingRepositoryMock({this.artificialDelay = const Duration(milliseconds: 300)});
 
@@ -22,12 +21,81 @@ class BookingRepositoryMock implements BookingRepository {
     slotLabel: 'No. 01',
   );
 
+  final Map<String, BookingDetails> _latestByUser = <String, BookingDetails>{
+    '1': _seedUser1,
+  };
+
   @override
   Future<BookingDetails?> fetchLatestBookingDetails(String userId) async {
     await Future<void>.delayed(artificialDelay);
-    if (userId == '1') {
-      return _seedUser1;
+    return _latestByUser[userId];
+  }
+
+  @override
+  Future<BookingDetails> createBooking({
+    required String userId,
+    required String bikeId,
+    required String stationId,
+    required String slotId,
+  }) async {
+    await Future<void>.delayed(artificialDelay);
+
+    final now = DateTime.now().toUtc();
+    final details = BookingDetails(
+      booking: Booking(
+        id: 'mock-booking-${now.microsecondsSinceEpoch}',
+        userId: userId,
+        bikeId: bikeId,
+        stationId: stationId,
+        slotId: slotId,
+        reservedAt: now,
+      ),
+      stationName: _stationName(stationId),
+      bikeNumber: _bikeNumber(bikeId),
+      slotLabel: _slotLabel(slotId),
+    );
+    _latestByUser[userId] = details;
+    return details;
+  }
+
+  String _stationName(String stationId) {
+    switch (stationId) {
+      case '1':
+        return 'Esquirol';
+      case '2':
+        return 'Carmes';
+      case '3':
+        return 'Grand Rond';
+      case '4':
+        return 'Victor Hugo';
+      case '5':
+        return 'Saint-Georges';
+      default:
+        return stationId;
     }
-    return null;
+  }
+
+  String _bikeNumber(String bikeId) {
+    switch (bikeId) {
+      case '2':
+        return '1002';
+      case '3':
+        return '1003';
+      case '10':
+        return '4872';
+      case '11':
+        return '5021';
+      case '12':
+        return '5022';
+      case '13':
+        return '5023';
+      default:
+        return bikeId;
+    }
+  }
+
+  String _slotLabel(String slotId) {
+    if (slotId.length == 1) return 'No. 0$slotId';
+    return 'No. $slotId';
   }
 }

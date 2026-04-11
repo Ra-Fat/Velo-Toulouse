@@ -16,23 +16,47 @@ class BookingViewModel extends ChangeNotifier {
 
   BookingState _state = BookingState(
     details: AsyncValue<BookingDetails?>.loading(),
+    createResult: AsyncValue<BookingDetails?>.success(null),
   );
 
   BookingState get state => _state;
 
   Future<void> load() async {
-    _state = BookingState(details: AsyncValue<BookingDetails?>.loading());
+    _state = _state.copyWith(details: AsyncValue<BookingDetails?>.loading());
     notifyListeners();
     try {
       final result = await _repository.fetchLatestBookingDetails(userId);
-      _state = BookingState(
-        details: AsyncValue<BookingDetails?>.success(result),
-      );
+      _state = _state.copyWith(details: AsyncValue<BookingDetails?>.success(result));
     } catch (e) {
-      _state = BookingState(
-        details: AsyncValue<BookingDetails?>.error(e),
-      );
+      _state = _state.copyWith(details: AsyncValue<BookingDetails?>.error(e));
     }
     notifyListeners();
+  }
+
+  Future<BookingDetails?> createBooking({
+    required String bikeId,
+    required String stationId,
+    required String slotId,
+  }) async {
+    _state = _state.copyWith(createResult: AsyncValue<BookingDetails?>.loading());
+    notifyListeners();
+    try {
+      final details = await _repository.createBooking(
+        userId: userId,
+        bikeId: bikeId,
+        stationId: stationId,
+        slotId: slotId,
+      );
+      _state = _state.copyWith(
+        createResult: AsyncValue<BookingDetails?>.success(details),
+        details: AsyncValue<BookingDetails?>.success(details),
+      );
+      notifyListeners();
+      return details;
+    } catch (e) {
+      _state = _state.copyWith(createResult: AsyncValue<BookingDetails?>.error(e));
+      notifyListeners();
+      return null;
+    }
   }
 }

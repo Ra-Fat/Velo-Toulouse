@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../models/bike/bike.dart';
 import '../../../models/station/station.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/async_value.dart';
 import '../../utils/geo_to_map_fraction.dart';
-import 'book_bike_placeholder_screen.dart';
+import 'booking_timer_screen.dart';
 import 'view_model/booking_view_model.dart';
 import 'view_model/map_view_model.dart';
 import 'widgets/active_booking_banner.dart';
@@ -116,6 +117,7 @@ class _StationSheetLayer extends StatelessWidget {
     final mapVm = context.watch<MapViewModel>();
     final station = mapVm.selectedStation;
     if (station == null) return const SizedBox.shrink();
+
     return Positioned(
       left: 0,
       right: 0,
@@ -128,27 +130,54 @@ class _StationSheetLayer extends StatelessWidget {
         onSelectBike: mapVm.selectBike,
         onClose: () => mapVm.selectStation(null),
         onBook: () {
+          final bookingVm = context.read<BookingViewModel>();
           final id = mapVm.state.selectedBikeId;
           if (id == null) return;
           final bikes = mapVm.state.bikesAtStation.data;
           if (bikes == null) return;
-          String? bikeNumber;
+          Bike? bike;
           for (final b in bikes) {
             if (b.id == id) {
-              bikeNumber = b.number;
+              bike = b;
               break;
             }
           }
-          if (bikeNumber == null) return;
-          final bikeNumberStr = bikeNumber;
-          Navigator.of(context).push<void>(
-            MaterialPageRoute<void>(
-              builder: (context) => BookBikePlaceholderScreen(
-                stationName: station.name,
-                bikeNumber: bikeNumberStr,
-              ),
-            ),
+          final selectedBike = bike;
+          if (selectedBike == null) return;
+          final nav = Navigator.of(context);
+          showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => const Center(child: CircularProgressIndicator()),
           );
+          bookingVm
+              .createBooking(
+                bikeId: selectedBike.id,
+                stationId: station.id,
+                slotId: selectedBike.currentSlotId,
+              )
+              .then((details) {
+                nav.pop();
+                if (!context.mounted) return;
+                if (details == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Could not create booking')),
+                  );
+                  return;
+                }
+                nav.push<void>(
+                  MaterialPageRoute<void>(
+                    builder: (context) => BookingTimerScreen(details: details),
+                  ),
+                );
+              })
+              .catchError((_) {
+                nav.pop();
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not create booking')),
+                );
+              });
         },
       ),
     );
@@ -212,7 +241,18 @@ class _BookingOverlay extends StatelessWidget {
       case AsyncValueState.success:
         final data = s.details.data;
         if (data == null) return const SizedBox.shrink();
-        return ActiveBookingBanner(details: data);
+        return ActiveBookingBanner(
+          details: data,
+          onTap: () {
+            Navigator.of(context).push<void>(
+              MaterialPageRoute<void>(
+                builder: (context) => BookingTimerScreen(
+                  details: data,
+                ),
+              ),
+            );
+          },
+        );
     }
   }
 }
