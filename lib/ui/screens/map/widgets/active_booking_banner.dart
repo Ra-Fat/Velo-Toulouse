@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../models/booking/booking_details.dart';
-import '../../../../theme/app_colors.dart';
-import '../../../../../utils/format_date.dart';
+import '../../../../models/booking/booking_details.dart';
+import '../../../theme/app_colors.dart';
+import '../../../../utils/format_date.dart';
 
 class ActiveBookingBanner extends StatelessWidget {
-  const ActiveBookingBanner({super.key, required this.details, this.onTap});
+  const ActiveBookingBanner({
+    super.key,
+    required this.details,
+    this.onTap,
+  });
 
   final BookingDetails details;
   final VoidCallback? onTap;
@@ -30,11 +34,7 @@ class ActiveBookingBanner extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.directions_bike,
-                    color: AppColors.primary,
-                    size: 22,
-                  ),
+                  Icon(Icons.directions_bike, color: AppColors.primary, size: 22),
                   const SizedBox(width: 8),
                   Text(
                     'Active booking',

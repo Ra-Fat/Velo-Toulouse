@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:project/ui/screens/map/widgets/station_bike_list.dart';
 
-import '../../../../../../models/bike/bike.dart';
-import '../../../../../../models/station/station.dart';
-import '../../../../../theme/app_colors.dart';
-import '../../../../../utils/async_value.dart';
+import '../../../../models/bike/bike.dart';
+import '../../../../models/station/station.dart';
+import '../../../theme/app_colors.dart';
+import '../../../../utils/async_value.dart';
 
 class StationBikeSheet extends StatelessWidget {
   const StationBikeSheet({
@@ -30,11 +31,11 @@ class StationBikeSheet extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Material(
-      elevation: 0,
-      borderRadius: BorderRadius.zero,
+      elevation: 12,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
       color: Colors.white,
       child: SafeArea(
-        top: true,
+        top: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -108,16 +109,15 @@ class StationBikeSheet extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: _BikeListBody(
+              child: StationBikeList(
                 bikes: bikes,
                 selectedBikeId: selectedBikeId,
                 onSelectBike: onSelectBike,
                 hasActiveBooking: hasActiveBooking,
               ),
             ),
-
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 10),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
               child: FilledButton(
                 onPressed: selectedBikeId == null || hasActiveBooking
                     ? null
@@ -131,22 +131,13 @@ class StationBikeSheet extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Book',
+                  hasActiveBooking
+                      ? 'You currently have an active booking'
+                      : 'Book',
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 22, bottom: 12),
-              child: Text(
-                hasActiveBooking
-                    ? "* You can't book while having an active booking"
-                    : "",
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: AppColors.textSecondary,
                 ),
               ),
             ),
@@ -157,92 +148,3 @@ class StationBikeSheet extends StatelessWidget {
   }
 }
 
-class _BikeListBody extends StatelessWidget {
-  const _BikeListBody({
-    required this.bikes,
-    required this.selectedBikeId,
-    required this.onSelectBike,
-    required this.hasActiveBooking,
-  });
-
-  final AsyncValue<List<Bike>> bikes;
-  final String? selectedBikeId;
-  final ValueChanged<String?> onSelectBike;
-  final bool hasActiveBooking;
-
-  @override
-  Widget build(BuildContext context) {
-    switch (bikes.state) {
-      case AsyncValueState.loading:
-        return const Center(child: CircularProgressIndicator());
-      case AsyncValueState.error:
-        return Center(
-          child: Text(
-            'Could not load bikes\n${bikes.error}',
-            textAlign: TextAlign.center,
-          ),
-        );
-      case AsyncValueState.success:
-        final list = bikes.data ?? <Bike>[];
-        if (list.isEmpty) {
-          return const Center(child: Text('No bikes available right now.'));
-        }
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          itemCount: list.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 10),
-          itemBuilder: (context, i) {
-            final bike = list[i];
-            final selected = bike.id == selectedBikeId;
-            return Material(
-              color: selected ? Colors.white : Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(12),
-              child: InkWell(
-                onTap: hasActiveBooking ? null : () => onSelectBike(bike.id),
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: selected
-                          ? AppColors.primary
-                          : AppColors.textSecondary,
-                      width: selected ? 2 : 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Bike #${bike.number}',
-                              style: Theme.of(context).textTheme.titleSmall
-                                  ?.copyWith(fontWeight: FontWeight.w700),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'At this station',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(color: AppColors.textSecondary),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(
-                        Icons.directions_bike,
-                        color: AppColors.primary,
-                        size: 32,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-    }
-  }
-}

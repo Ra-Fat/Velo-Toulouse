@@ -6,10 +6,10 @@ import 'package:provider/provider.dart';
 import '../../../../../../../models/bike/bike.dart';
 import '../../../../theme/app_colors.dart';
 import '../booking/booking_timer_screen.dart';
-import 'content/map_search_bar.dart';
-import 'content/layers/booking_banner_layer.dart';
-import 'content/layers/map_stack_layer.dart';
-import 'content/layers/station_sheet_layer.dart';
+import 'map_search_bar.dart';
+import 'layers/booking_banner_layer.dart';
+import 'layers/map_stack_layer.dart';
+import 'layers/station_sheet_layer.dart';
 
 class MapScreenContent extends StatelessWidget {
   const MapScreenContent({super.key});

@@ -1,5 +1,5 @@
 import 'package:project/models/booking/booking_details.dart';
-import 'package:project/ui/utils/async_value.dart';
+import 'package:project/utils/async_value.dart';
 
 class BookingState {
   const BookingState({

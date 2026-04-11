@@ -4,7 +4,7 @@ import '../../../../../models/subscription/subscription.dart';
 import '../../../../../models/user_subscription/user_subscription.dart';
 import '../../../../theme/app_colors.dart';
 
-import '../../../../utils/format_date.dart';
+import '../../../../../utils/format_date.dart';
 
 String _planTitle(UserSubscription pass, List<Subscription> catalog) {
   for (final s in catalog) {

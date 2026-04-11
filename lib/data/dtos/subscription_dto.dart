@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/models/subscription/subscription.dart';
 
-import '../../core/subscription_enums.dart';
+import '../../utils/subscription_enums.dart';
 
 class SubscriptionDto {
   static const String idKey = 'id';
@@ -11,7 +11,9 @@ class SubscriptionDto {
   static const String isActiveKey = 'is_active';
   static const String sortOrderKey = 'sort_order';
 
-  static Subscription fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+  static Subscription fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
     final data = doc.data();
     if (data == null) {
       throw StateError('Subscription document ${doc.id} has no data');
@@ -27,7 +29,9 @@ class SubscriptionDto {
       id: doc.id,
       name: data[nameKey],
       priceEuros: (data[priceEurosKey] as num).toDouble(),
-      durationKind: SubscriptionTypeX.fromDurationKind(data[durationKindKey] as String),
+      durationKind: SubscriptionType.values.byName(
+        data[durationKindKey] as String,
+      ),
       isActive: data[isActiveKey],
       sortOrder: (data[sortOrderKey] as num).toInt(),
     );

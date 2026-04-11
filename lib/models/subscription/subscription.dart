@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../../core/subscription_enums.dart';
+import '../../utils/subscription_enums.dart';
 
 /// Catalog subscription (immutable domain entity).
 @immutable

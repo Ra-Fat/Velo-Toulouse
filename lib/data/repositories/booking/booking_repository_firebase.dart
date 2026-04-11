@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../core/firestore_paths.dart';
+import '../../../utils/firestore_paths.dart';
 import '../../../models/booking/booking.dart';
 import '../../../models/booking/booking_details.dart';
 import '../../dtos/booking_dto.dart';

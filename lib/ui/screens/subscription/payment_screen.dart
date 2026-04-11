@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:project/utils/plan_duration.dart';
 
-import '../../../../../models/subscription/subscription.dart';
-import '../../../../theme/app_colors.dart';
-import '../../../../../utils/plan_duration.dart';
-import '../step_progress.dart';
-import 'reciept_card.dart';
+import '../../../models/subscription/subscription.dart';
+import '../../theme/app_colors.dart';
+import 'widgets/payment/reciept_card.dart';
+import 'widgets/step_progress.dart';
 
 class PaymentScreen extends StatelessWidget {
   const PaymentScreen({
@@ -17,7 +17,6 @@ class PaymentScreen extends StatelessWidget {
   final Subscription subscription;
   final VoidCallback onBack;
 
-  /// When set, called after Pay — typically writes Firestore then refreshes subscription state.
   final Future<void> Function()? onPaymentSuccess;
 
   @override
