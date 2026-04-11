@@ -14,6 +14,7 @@ class StationBikeSheet extends StatelessWidget {
     required this.onSelectBike,
     required this.onBook,
     required this.onClose,
+    required this.hasActiveBooking,
   });
 
   final Station station;
@@ -22,6 +23,7 @@ class StationBikeSheet extends StatelessWidget {
   final ValueChanged<String?> onSelectBike;
   final VoidCallback onBook;
   final VoidCallback onClose;
+  final bool hasActiveBooking;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +84,7 @@ class StationBikeSheet extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '${station.availableBikesCount} bikes available',
+                      '${station.availableBikesCount} ${station.availableBikesCount == 1 ? 'bike' : 'bikes'} available',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w800,
                         color: Colors.white,
@@ -110,12 +112,15 @@ class StationBikeSheet extends StatelessWidget {
                 bikes: bikes,
                 selectedBikeId: selectedBikeId,
                 onSelectBike: onSelectBike,
+                hasActiveBooking: hasActiveBooking,
               ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
               child: FilledButton(
-                onPressed: selectedBikeId == null ? null : onBook,
+                onPressed: selectedBikeId == null || hasActiveBooking
+                    ? null
+                    : onBook,
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
@@ -124,9 +129,14 @@ class StationBikeSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                child: const Text(
-                  'Book',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                child: Text(
+                  hasActiveBooking
+                      ? 'You currently have an active booking'
+                      : 'Book',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
@@ -142,11 +152,13 @@ class _BikeListBody extends StatelessWidget {
     required this.bikes,
     required this.selectedBikeId,
     required this.onSelectBike,
+    required this.hasActiveBooking,
   });
 
   final AsyncValue<List<Bike>> bikes;
   final String? selectedBikeId;
   final ValueChanged<String?> onSelectBike;
+  final bool hasActiveBooking;
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +188,7 @@ class _BikeListBody extends StatelessWidget {
               color: selected ? Colors.white : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
               child: InkWell(
-                onTap: () => onSelectBike(bike.id),
+                onTap: hasActiveBooking ? null : () => onSelectBike(bike.id),
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   padding: const EdgeInsets.all(14),

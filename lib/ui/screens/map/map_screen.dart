@@ -69,38 +69,38 @@ class _MapStack extends StatelessWidget {
               AsyncValueState.loading => const SizedBox.shrink(),
               AsyncValueState.error => const SizedBox.shrink(),
               AsyncValueState.success => () {
-                  final list = stations.data ?? <Station>[];
-                  return Stack(
-                    children: [
-                      for (final station in list)
-                        () {
-                          final frac = geoToMapFraction(
-                            station.latitude,
-                            station.longitude,
-                          );
-                          final left = frac.dx * w - 18;
-                          final top = frac.dy * h - 18;
-                          final selected =
-                              mapVm.state.selectedStationId == station.id;
-                          return Positioned(
-                            left: left.clamp(0.0, w - 36),
-                            top: top.clamp(0.0, h - 36),
-                            child: MapStationPin(
-                              count: station.availableBikesCount,
-                              selected: selected,
-                              onTap: () {
-                                if (selected) {
-                                  mapVm.selectStation(null);
-                                } else {
-                                  mapVm.selectStation(station.id);
-                                }
-                              },
-                            ),
-                          );
-                        }(),
-                    ],
-                  );
-                }(),
+                final list = stations.data ?? <Station>[];
+                return Stack(
+                  children: [
+                    for (final station in list)
+                      () {
+                        final frac = geoToMapFraction(
+                          station.latitude,
+                          station.longitude,
+                        );
+                        final left = frac.dx * w - 18;
+                        final top = frac.dy * h - 18;
+                        final selected =
+                            mapVm.state.selectedStationId == station.id;
+                        return Positioned(
+                          left: left.clamp(0.0, w - 36),
+                          top: top.clamp(0.0, h - 36),
+                          child: MapStationPin(
+                            count: station.availableBikesCount,
+                            selected: selected,
+                            onTap: () {
+                              if (selected) {
+                                mapVm.selectStation(null);
+                              } else {
+                                mapVm.selectStation(station.id);
+                              }
+                            },
+                          ),
+                        );
+                      }(),
+                  ],
+                );
+              }(),
             },
           ],
         );
@@ -148,7 +148,8 @@ class _StationSheetLayer extends StatelessWidget {
           showDialog<void>(
             context: context,
             barrierDismissible: false,
-            builder: (context) => const Center(child: CircularProgressIndicator()),
+            builder: (context) =>
+                const Center(child: CircularProgressIndicator()),
           );
           bookingVm
               .createBooking(
@@ -179,6 +180,8 @@ class _StationSheetLayer extends StatelessWidget {
                 );
               });
         },
+        hasActiveBooking:
+            context.watch<BookingViewModel>().state.details.data != null,
       ),
     );
   }
@@ -246,9 +249,7 @@ class _BookingOverlay extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push<void>(
               MaterialPageRoute<void>(
-                builder: (context) => BookingTimerScreen(
-                  details: data,
-                ),
+                builder: (context) => BookingTimerScreen(details: data),
               ),
             );
           },
