@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/models/subscription/subscription.dart';
 import 'package:project/ui/screens/subscription/widgets/subscription_copy.dart';
 import 'package:project/ui/screens/subscription/widgets/subscription_selection/plan_card.dart';
-import 'package:project/ui/utils/async_value.dart';
+import 'package:project/utils/async_value.dart';
 
 class CatalogBody extends StatelessWidget {
   const CatalogBody({

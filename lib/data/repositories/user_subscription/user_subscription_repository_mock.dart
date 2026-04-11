@@ -1,4 +1,4 @@
-import '../../../core/subscription_enums.dart';
+import '../../../utils/subscription_enums.dart';
 import '../../../models/user_subscription/user_subscription.dart';
 import '../subscription/subscription_repository.dart';
 import 'user_subscription_repository.dart';

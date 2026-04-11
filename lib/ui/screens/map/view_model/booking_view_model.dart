@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../../../../data/repositories/booking/booking_repository.dart';
 import '../../../../models/booking/booking_details.dart';
 import '../../../states/booking_state.dart';
-import '../../../utils/async_value.dart';
+import '../../../../utils/async_value.dart';
 
 class BookingViewModel extends ChangeNotifier {
   BookingViewModel({required BookingRepository repository, this.userId = '1'})

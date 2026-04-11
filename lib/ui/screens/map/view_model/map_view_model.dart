@@ -5,7 +5,7 @@ import '../../../../data/repositories/station/station_repository.dart';
 import '../../../../models/bike/bike.dart';
 import '../../../../models/station/station.dart';
 import '../../../states/map_state.dart';
-import '../../../utils/async_value.dart';
+import '../../../../utils/async_value.dart';
 
 class MapViewModel extends ChangeNotifier {
   MapViewModel({

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project/models/subscription/subscription.dart';
 
-import '../../core/subscription_enums.dart';
+import '../../utils/subscription_enums.dart';
 
 class SubscriptionDto {
   static const String idKey = 'id';

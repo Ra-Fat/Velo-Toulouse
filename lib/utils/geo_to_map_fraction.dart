@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import '../../core/map_bounds.dart';
+import 'map_bounds.dart';
 
 /// Maps WGS84 to normalized [0,1] x/y for a Stack + Positioned overlay on the static map image.
 /// x increases east; y increases down (north is smaller y).

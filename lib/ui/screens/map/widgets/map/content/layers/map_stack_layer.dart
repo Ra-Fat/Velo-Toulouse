@@ -4,7 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../../../models/station/station.dart';
-import '../../../../../../utils/async_value.dart';
+import '../../../../../../../utils/async_value.dart';
 import '../../../../view_model/map_view_model.dart';
 import '../map_station_pin.dart';
 

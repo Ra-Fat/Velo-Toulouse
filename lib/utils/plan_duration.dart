@@ -1,5 +1,5 @@
 import 'package:project/models/subscription/subscription.dart';
-import 'package:project/core/subscription_enums.dart';
+import 'package:project/utils/subscription_enums.dart';
 
 (String, String, String) planDuration(Subscription s) {
   final now = DateTime.now();

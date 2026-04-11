@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../models/bike/bike.dart';
-import '../../../../../../models/station/station.dart';
-import '../../../../../theme/app_colors.dart';
-import '../../../../../../utils/async_value.dart';
+import '../../../../models/bike/bike.dart';
+import '../../../../models/station/station.dart';
+import '../../../theme/app_colors.dart';
+import '../../../../utils/async_value.dart';
 
 class StationBikeSheet extends StatelessWidget {
   const StationBikeSheet({
@@ -30,11 +30,11 @@ class StationBikeSheet extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Material(
-      elevation: 0,
-      borderRadius: BorderRadius.zero,
+      elevation: 12,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
       color: Colors.white,
       child: SafeArea(
-        top: true,
+        top: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -115,9 +115,8 @@ class StationBikeSheet extends StatelessWidget {
                 hasActiveBooking: hasActiveBooking,
               ),
             ),
-
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 10),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
               child: FilledButton(
                 onPressed: selectedBikeId == null || hasActiveBooking
                     ? null
@@ -131,22 +130,13 @@ class StationBikeSheet extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Book',
+                  hasActiveBooking
+                      ? 'You currently have an active booking'
+                      : 'Book',
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 22, bottom: 12),
-              child: Text(
-                hasActiveBooking
-                    ? "* You can't book while having an active booking"
-                    : "",
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: AppColors.textSecondary,
                 ),
               ),
             ),

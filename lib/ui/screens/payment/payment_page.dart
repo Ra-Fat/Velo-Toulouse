@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:project/utils/plan_duration.dart';
 
-import '../../../../../models/subscription/subscription.dart';
-import '../../../../theme/app_colors.dart';
-import '../../../../../utils/plan_duration.dart';
-import '../step_progress.dart';
-import 'reciept_card.dart';
+import '../../../models/subscription/subscription.dart';
+import '../../theme/app_colors.dart';
+import '../subscription/widgets/payment/reciept_card.dart';
+import '../subscription/widgets/step_progress.dart';
 
-class PaymentScreen extends StatelessWidget {
-  const PaymentScreen({
+class PaymentPage extends StatelessWidget {
+  const PaymentPage({
     super.key,
     required this.subscription,
     required this.onBack,
-    this.onPaymentSuccess,
   });
 
   final Subscription subscription;
   final VoidCallback onBack;
-
-  /// When set, called after Pay — typically writes Firestore then refreshes subscription state.
-  final Future<void> Function()? onPaymentSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -99,22 +95,15 @@ class PaymentScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: FilledButton(
-                onPressed: () async {
-                  final custom = onPaymentSuccess;
-                  if (custom != null) {
-                    await custom();
-                    return;
-                  }
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Pay €${subscription.priceEuros} (demo — no repository)',
-                        ),
-                        behavior: SnackBarBehavior.floating,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Pay ${subscription.priceEuros} (static demo)',
                       ),
-                    );
-                  }
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
                 },
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.primary,
@@ -125,7 +114,7 @@ class PaymentScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Pay €${subscription.priceEuros}',
+                  'Pay ${subscription.priceEuros}',
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,

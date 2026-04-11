@@ -5,7 +5,7 @@ import '../../../../data/repositories/user_subscription/user_subscription_reposi
 import '../../../../models/subscription/subscription.dart';
 import '../../../../models/user_subscription/user_subscription.dart';
 import '../../../states/subscription_state.dart';
-import '../../../utils/async_value.dart';
+import '../../../../utils/async_value.dart';
 
 class SubscriptionViewModel extends ChangeNotifier {
   SubscriptionViewModel({
