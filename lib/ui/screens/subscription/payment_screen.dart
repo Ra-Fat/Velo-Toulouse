@@ -109,7 +109,7 @@ class PaymentScreen extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Pay ${subscription.priceEuros} (demo — no repository)',
+                          'Pay €${subscription.priceEuros} (demo — no repository)',
                         ),
                         behavior: SnackBarBehavior.floating,
                       ),
@@ -125,7 +125,7 @@ class PaymentScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Pay ${subscription.priceEuros}',
+                  'Pay €${subscription.priceEuros}',
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,

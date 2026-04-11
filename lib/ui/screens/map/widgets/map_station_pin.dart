@@ -16,7 +16,7 @@ class MapStationPin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = selected ? const Color(0xFF2196F3) : AppColors.primary;
+    final bg = selected ? AppColors.textSecondary : AppColors.primary;
     return GestureDetector(
       onTap: onTap,
       child: Container(

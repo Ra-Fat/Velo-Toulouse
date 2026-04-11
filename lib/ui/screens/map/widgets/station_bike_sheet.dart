@@ -78,14 +78,14 @@ class StationBikeSheet extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.primary, width: 2),
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '${station.availableBikesCount}',
+                      '${station.availableBikesCount} bikes available',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w800,
-                        color: AppColors.primary,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -173,7 +173,7 @@ class _BikeListBody extends StatelessWidget {
             final bike = list[i];
             final selected = bike.id == selectedBikeId;
             return Material(
-              color: Colors.white,
+              color: selected ? Colors.white : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
               child: InkWell(
                 onTap: () => onSelectBike(bike.id),
@@ -183,7 +183,9 @@ class _BikeListBody extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: selected ? AppColors.primary : AppColors.border,
+                      color: selected
+                          ? AppColors.primary
+                          : AppColors.textSecondary,
                       width: selected ? 2 : 1,
                     ),
                   ),
@@ -207,17 +209,10 @@ class _BikeListBody extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.chevron_right_rounded,
-                          color: Colors.white,
-                        ),
+                      Icon(
+                        Icons.directions_bike,
+                        color: AppColors.primary,
+                        size: 32,
                       ),
                     ],
                   ),
