@@ -23,9 +23,12 @@ import 'data/repositories/user_subscription/user_subscription_repository_mock.da
 import 'data/repositories/user_subscription/user_subscription_repository_firebase.dart';
 
 import 'main_common.dart';
+import 'firebase_options.dart';
 
-
-const bool _useFirebase = bool.fromEnvironment('USE_FIREBASE', defaultValue: false);
+const bool _useFirebase = bool.fromEnvironment(
+  'USE_FIREBASE',
+  defaultValue: true,
+);
 
 List<InheritedProvider> get devProviders {
   final subscriptionRepository = _useFirebase
@@ -44,31 +47,30 @@ List<InheritedProvider> get devProviders {
     ),
 
     Provider<BookingRepository>(
-      create: (_) => _useFirebase
-          ? BookingRepositoryFirebase()
-          : BookingRepositoryMock(),
+      create: (_) =>
+          _useFirebase ? BookingRepositoryFirebase() : BookingRepositoryMock(),
     ),
 
     Provider<StationRepository>(
-      create: (_) => _useFirebase
-          ? StationRepositoryFirebase()
-          : StationRepositoryMock(),
+      create: (_) =>
+          _useFirebase ? StationRepositoryFirebase() : StationRepositoryMock(),
     ),
 
     Provider<BikeRepository>(
-      create: (_) => _useFirebase
-          ? BikeRepositoryFirebase()
-          : BikeRepositoryMock(),
+      create: (_) =>
+          _useFirebase ? BikeRepositoryFirebase() : BikeRepositoryMock(),
     ),
   ];
 }
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (_useFirebase) {
-    await Firebase.initializeApp();
+    print('Using Firebase repositories');
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
   mainCommon(devProviders);
 }

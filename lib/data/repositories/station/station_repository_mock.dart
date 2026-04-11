@@ -11,7 +11,7 @@ class StationRepositoryMock implements StationRepository {
   static final List<Station> _stations = <Station>[
     const Station(
       id: '1',
-      name: 'Visal\'s home',
+      name: 'Stueng Meanchey Tmei',
       latitude: 11.5306,
       longitude: 104.8783,
       isActive: true,
@@ -20,7 +20,7 @@ class StationRepositoryMock implements StationRepository {
     ),
     const Station(
       id: '2',
-      name: 'Rafat\'s home',
+      name: 'Kmall',
       latitude: 11.5289,
       longitude: 104.8794,
       isActive: true,
@@ -29,7 +29,7 @@ class StationRepositoryMock implements StationRepository {
     ),
     const Station(
       id: '3',
-      name: 'Raksa\'s home',
+      name: 'Prey Sor',
       latitude: 11.5278,
       longitude: 104.8822,
       isActive: true,
@@ -38,7 +38,7 @@ class StationRepositoryMock implements StationRepository {
     ),
     const Station(
       id: '4',
-      name: 'Leakhena\'s home',
+      name: 'Beltei International School',
       latitude: 11.5334,
       longitude: 104.8776,
       isActive: true,
