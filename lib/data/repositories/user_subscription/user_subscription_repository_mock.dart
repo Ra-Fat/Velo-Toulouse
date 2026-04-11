@@ -1,3 +1,4 @@
+import '../../../services/app_session.dart';
 import '../../../utils/subscription_enums.dart';
 import '../../../models/user_subscription/user_subscription.dart';
 import '../subscription/subscription_repository.dart';
@@ -14,7 +15,7 @@ class UserSubscriptionRepositoryMock implements UserSubscriptionRepository {
   final SubscriptionRepository _subscriptionRepository;
   final Duration artificialDelay;
 
-  /// When true, user `1` has an active monthly pass (for testing the “current subscription” UI).
+  /// When true, [AppSession.userId] has an active monthly pass (for testing the “current subscription” UI).
   final bool simulateActiveSubscription;
 
   /// Set by [recordSubscriptionPurchase] so the next fetch reflects the purchase.
@@ -22,7 +23,7 @@ class UserSubscriptionRepositoryMock implements UserSubscriptionRepository {
 
   static final UserSubscription _activeForUser1 = UserSubscription(
     id: 'mock-user-sub',
-    userId: '1',
+    userId: AppSession.userId,
     subscriptionId: 'monthly',
     startsAt: DateTime.utc(2026, 4, 1),
     expiresAt: DateTime.utc(2027, 5, 1),
@@ -37,7 +38,7 @@ class UserSubscriptionRepositoryMock implements UserSubscriptionRepository {
       return _purchaseOverride;
     }
     if (!simulateActiveSubscription) return null;
-    if (userId == '1') {
+    if (userId == AppSession.userId) {
       return _activeForUser1;
     }
     return null;

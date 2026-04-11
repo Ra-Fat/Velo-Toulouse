@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/app_session.dart';
 import '../../../data/repositories/bike/bike_repository.dart';
 import '../../../data/repositories/booking/booking_repository.dart';
 import '../../../data/repositories/station/station_repository.dart';
@@ -18,7 +19,7 @@ class MapScreen extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => BookingViewModel(
             repository: context.read<BookingRepository>(),
-            userId: '1',
+            userId: AppSession.userId,
           )..load(),
         ),
         ChangeNotifierProvider(

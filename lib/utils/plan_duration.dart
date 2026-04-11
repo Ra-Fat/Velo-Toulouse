@@ -24,7 +24,7 @@ import 'package:project/utils/subscription_enums.dart';
       break;
   }
 
-  String _monthShort(int month) {
+  String monthShort(int month) {
     const months = [
       '', // for 1-based month
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -33,10 +33,10 @@ import 'package:project/utils/subscription_enums.dart';
     return months[month];
   }
 
-  String _format(DateTime date) {
+  String format(DateTime date) {
     // Example: 5 Apr 2026
-    return '${date.day} ${_monthShort(date.month)} ${date.year}';
+    return '${date.day} ${monthShort(date.month)} ${date.year}';
   }
 
-  return (_format(start), _format(end), renews);
+  return (format(start), format(end), renews);
 }

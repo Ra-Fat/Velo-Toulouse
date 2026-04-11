@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/app_session.dart';
 import '../../../data/repositories/subscription/subscription_repository.dart';
 import '../../../data/repositories/user_subscription/user_subscription_repository.dart';
 import 'view_model/subscription_view_model.dart';
@@ -17,7 +18,7 @@ class SubscriptionScreen extends StatelessWidget {
       create: (context) => SubscriptionViewModel(
         subscriptionRepository: context.read<SubscriptionRepository>(),
         userSubscriptionRepository: context.read<UserSubscriptionRepository>(),
-        userId: '1',
+        userId: AppSession.userId,
       )..load(),
       child: SubscriptionSelectionScreen(onBackToMap: onBackToMap),
     );

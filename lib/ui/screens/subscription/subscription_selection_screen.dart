@@ -4,6 +4,7 @@ import 'package:project/ui/screens/subscription/widgets/subscription_selection/a
 import 'package:project/ui/screens/subscription/widgets/subscription_selection/subscription_selection_content.dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/app_session.dart';
 import '../../../../data/repositories/user_subscription/user_subscription_repository.dart';
 import '../../../../models/subscription/subscription.dart';
 import '../../../../models/user_subscription/user_subscription.dart';
@@ -27,7 +28,7 @@ class SubscriptionSelectionScreen extends StatelessWidget {
             onPaymentSuccess: () async {
               final repo = context.read<UserSubscriptionRepository>();
               await repo.recordSubscriptionPurchase(
-                userId: '1',
+                userId: AppSession.userId,
                 subscriptionId: picked.id,
               );
               await context.read<SubscriptionViewModel>().load();

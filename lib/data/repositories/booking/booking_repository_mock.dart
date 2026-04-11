@@ -1,3 +1,4 @@
+import '../../../services/app_session.dart';
 import '../../../models/booking/booking.dart';
 import '../../../models/booking/booking_details.dart';
 import 'booking_repository.dart';
@@ -10,7 +11,7 @@ class BookingRepositoryMock implements BookingRepository {
   static final BookingDetails _seedUser1 = BookingDetails(
     booking: Booking(
       id: 'mock-booking-1',
-      userId: '1',
+      userId: AppSession.userId,
       bikeId: '1',
       stationId: '1',
       slotId: '1',
@@ -22,6 +23,7 @@ class BookingRepositoryMock implements BookingRepository {
   );
 
   final Map<String, BookingDetails> _latestByUser = <String, BookingDetails>{
+    AppSession.userId: _seedUser1,
   };
 
   @override

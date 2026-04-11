@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../../services/app_session.dart';
 import '../../../../data/repositories/subscription/subscription_repository.dart';
 import '../../../../data/repositories/user_subscription/user_subscription_repository.dart';
 import '../../../../models/subscription/subscription.dart';
@@ -11,7 +12,7 @@ class SubscriptionViewModel extends ChangeNotifier {
   SubscriptionViewModel({
     required SubscriptionRepository subscriptionRepository,
     required UserSubscriptionRepository userSubscriptionRepository,
-    this.userId = '1',
+    this.userId = AppSession.userId,
   })  : _subscriptionRepository = subscriptionRepository,
         _userSubscriptionRepository = userSubscriptionRepository;
 
