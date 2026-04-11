@@ -1,6 +1,6 @@
 # 🚲 Velo Toulouse
 
-A Flutter-based mobile application focused on **refactoring and enhancing an existing bike rental and subscription system in Toulouse by following MVVVM design pattern**.
+A Flutter-based mobile application focused on **refactoring and enhancing an existing bike rental and subscription system in Toulouse by following MVVM design pattern**.
 
 
 ---
