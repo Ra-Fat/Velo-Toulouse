@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/utils/plan_duration.dart';
 
-import '../../../models/subscription/subscription.dart';
-import '../../theme/app_colors.dart';
-import 'widgets/payment/reciept_card.dart';
-import 'widgets/step_progress.dart';
+import '../../../../../models/subscription/subscription.dart';
+import '../../../../theme/app_colors.dart';
+import '../../../../utils/plan_duration.dart';
+import '../step_progress.dart';
+import 'reciept_card.dart';
 
 class PaymentScreen extends StatelessWidget {
   const PaymentScreen({

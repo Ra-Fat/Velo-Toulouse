@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/screens/map/view_model/map_view_model.dart';
-import 'package:provider/provider.dart';
-
-import '../../data/repositories/bike/bike_repository.dart';
-import '../../data/repositories/booking/booking_repository.dart';
-import '../../data/repositories/station/station_repository.dart';
 import '../theme/app_colors.dart';
 import 'map/map_screen.dart';
-import 'map/view_model/booking_view_model.dart';
 import 'subscription/subscription_screen.dart';
 
 class HomeShell extends StatefulWidget {
@@ -27,26 +20,8 @@ class _HomeShellState extends State<HomeShell> {
         index: _index,
         sizing: StackFit.expand,
         children: [
-          MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (context) => BookingViewModel(
-                  repository: context.read<BookingRepository>(),
-                  userId: '1',
-                )..load(),
-              ),
-              ChangeNotifierProvider(
-                create: (context) => MapViewModel(
-                  stationRepository: context.read<StationRepository>(),
-                  bikeRepository: context.read<BikeRepository>(),
-                )..loadStations(),
-              ),
-            ],
-            child: const MapPlaceholderScreen(),
-          ),
-          SubscriptionFlowScreen(
-            onBackToMap: () => setState(() => _index = 0),
-          ),
+          const MapScreen(),
+          SubscriptionScreen(onBackToMap: () => setState(() => _index = 0)),
         ],
       ),
       bottomNavigationBar: NavigationBar(
@@ -63,7 +38,10 @@ class _HomeShellState extends State<HomeShell> {
           ),
           NavigationDestination(
             icon: Icon(Icons.card_membership_outlined),
-            selectedIcon: Icon(Icons.card_membership_rounded, color: AppColors.primary),
+            selectedIcon: Icon(
+              Icons.card_membership_rounded,
+              color: AppColors.primary,
+            ),
             label: 'Subscription',
           ),
         ],

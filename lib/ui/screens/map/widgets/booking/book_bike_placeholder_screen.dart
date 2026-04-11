@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../theme/app_colors.dart';
+import 'package:project/ui/theme/app_colors.dart';
 
 
 class BookBikePlaceholderScreen extends StatelessWidget {
@@ -36,15 +35,9 @@ class BookBikePlaceholderScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Text(
-              'Station: $stationName',
-              style: theme.textTheme.bodyLarge,
-            ),
+            Text('Station: $stationName', style: theme.textTheme.bodyLarge),
             const SizedBox(height: 8),
-            Text(
-              'Bike: #$bikeNumber',
-              style: theme.textTheme.bodyLarge,
-            ),
+            Text('Bike: #$bikeNumber', style: theme.textTheme.bodyLarge),
             const SizedBox(height: 24),
             Text(
               'Booking API, reservation timer, and confirmation screens are implemented in the next task branch.',
