@@ -20,11 +20,7 @@ class StationSheetLayer extends StatelessWidget {
     final station = mapVm.selectedStation;
     if (station == null) return const SizedBox.shrink();
 
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 0,
-      height: MediaQuery.sizeOf(context).height * 0.42,
+    return Positioned.fill(
       child: StationBikeSheet(
         station: station,
         bikes: mapVm.state.bikesAtStation,

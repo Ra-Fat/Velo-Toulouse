@@ -30,11 +30,11 @@ class StationBikeSheet extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Material(
-      elevation: 12,
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+      elevation: 0,
+      borderRadius: BorderRadius.zero,
       color: Colors.white,
       child: SafeArea(
-        top: false,
+        top: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -115,8 +115,9 @@ class StationBikeSheet extends StatelessWidget {
                 hasActiveBooking: hasActiveBooking,
               ),
             ),
+
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 10),
               child: FilledButton(
                 onPressed: selectedBikeId == null || hasActiveBooking
                     ? null
@@ -130,13 +131,22 @@ class StationBikeSheet extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  hasActiveBooking
-                      ? 'You currently have an active booking'
-                      : 'Book',
+                  'Book',
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
                   ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 22, bottom: 12),
+              child: Text(
+                hasActiveBooking
+                    ? "* You can't book while having an active booking"
+                    : "",
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: AppColors.textSecondary,
                 ),
               ),
             ),

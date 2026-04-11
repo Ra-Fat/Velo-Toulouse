@@ -16,14 +16,21 @@ class MapStationPin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = selected ? AppColors.textSecondary : AppColors.primary;
+    var backgroundColor = AppColors.primary;
+    if (selected) {
+      backgroundColor = AppColors.primaryDark;
+    } else if (count > 0) {
+      backgroundColor = AppColors.primary;
+    } else {
+      backgroundColor = AppColors.textSecondary;
+    }
     return GestureDetector(
-      onTap: onTap,
+      onTap: count > 0 ? onTap : null,
       child: Container(
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: bg,
+          color: backgroundColor,
           shape: BoxShape.circle,
           border: Border.all(color: Colors.white, width: 2),
           boxShadow: [
