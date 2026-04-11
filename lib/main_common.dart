@@ -1,16 +1,41 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import 'map/map_screen.dart';
-import 'subscription/subscription_screen.dart';
+import 'package:provider/provider.dart';
 
-class HomeShell extends StatefulWidget {
-  const HomeShell({super.key});
+import 'ui/screens/map/map_screen.dart';
+import 'ui/screens/subscription/subscription_screen.dart';
+import 'ui/theme/app_colors.dart';
 
-  @override
-  State<HomeShell> createState() => _HomeShellState();
+///
+/// Launch the application with the given list of providers
+///
+void mainCommon(List<InheritedProvider> providers) {
+  runApp(
+    MultiProvider(
+      providers: providers,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primary,
+            brightness: Brightness.light,
+          ),
+          scaffoldBackgroundColor: Colors.white,
+        ),
+        home: const VeloToulouseNavApp(),
+      ),
+    ),
+  );
 }
 
-class _HomeShellState extends State<HomeShell> {
+class VeloToulouseNavApp extends StatefulWidget {
+  const VeloToulouseNavApp({super.key});
+
+  @override
+  State<VeloToulouseNavApp> createState() => _VeloToulouseNavAppState();
+}
+
+class _VeloToulouseNavAppState extends State<VeloToulouseNavApp> {
   int _index = 0;
 
   @override
