@@ -22,7 +22,6 @@ class BookingRepositoryMock implements BookingRepository {
   );
 
   final Map<String, BookingDetails> _latestByUser = <String, BookingDetails>{
-    '1': _seedUser1,
   };
 
   @override

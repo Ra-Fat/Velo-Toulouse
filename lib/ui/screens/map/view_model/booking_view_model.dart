@@ -6,10 +6,8 @@ import '../../../states/booking_state.dart';
 import '../../../utils/async_value.dart';
 
 class BookingViewModel extends ChangeNotifier {
-  BookingViewModel({
-    required BookingRepository repository,
-    this.userId = '1',
-  }) : _repository = repository;
+  BookingViewModel({required BookingRepository repository, this.userId = '1'})
+    : _repository = repository;
 
   final BookingRepository _repository;
   final String userId;
@@ -26,7 +24,9 @@ class BookingViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       final result = await _repository.fetchLatestBookingDetails(userId);
-      _state = _state.copyWith(details: AsyncValue<BookingDetails?>.success(result));
+      _state = _state.copyWith(
+        details: AsyncValue<BookingDetails?>.success(result),
+      );
     } catch (e) {
       _state = _state.copyWith(details: AsyncValue<BookingDetails?>.error(e));
     }
@@ -38,7 +38,9 @@ class BookingViewModel extends ChangeNotifier {
     required String stationId,
     required String slotId,
   }) async {
-    _state = _state.copyWith(createResult: AsyncValue<BookingDetails?>.loading());
+    _state = _state.copyWith(
+      createResult: AsyncValue<BookingDetails?>.loading(),
+    );
     notifyListeners();
     try {
       final details = await _repository.createBooking(
@@ -54,7 +56,9 @@ class BookingViewModel extends ChangeNotifier {
       notifyListeners();
       return details;
     } catch (e) {
-      _state = _state.copyWith(createResult: AsyncValue<BookingDetails?>.error(e));
+      _state = _state.copyWith(
+        createResult: AsyncValue<BookingDetails?>.error(e),
+      );
       notifyListeners();
       return null;
     }

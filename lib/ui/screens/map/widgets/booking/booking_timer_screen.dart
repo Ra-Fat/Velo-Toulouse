@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
-import '../../../models/booking/booking_details.dart';
-import '../../theme/app_colors.dart';
+import 'package:project/models/booking/booking_details.dart';
+import 'package:project/ui/theme/app_colors.dart';
 
 class BookingTimerScreen extends StatefulWidget {
   const BookingTimerScreen({super.key, required this.details});
@@ -38,7 +37,9 @@ class _BookingTimerScreenState extends State<BookingTimerScreen> {
   }
 
   Duration _computeRemaining() {
-    final expiresAt = widget.details.booking.reservedAt.add(_reservationDuration);
+    final expiresAt = widget.details.booking.reservedAt.add(
+      _reservationDuration,
+    );
     final diff = expiresAt.difference(DateTime.now());
     if (diff.isNegative) return Duration.zero;
     return diff;
@@ -49,6 +50,8 @@ class _BookingTimerScreenState extends State<BookingTimerScreen> {
     final ss = d.inSeconds.remainder(60).toString().padLeft(2, '0');
     return '$mm:$ss';
   }
+
+  Future<void> _cancelRide() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -113,15 +116,70 @@ class _BookingTimerScreenState extends State<BookingTimerScreen> {
               ),
             ],
             const Spacer(),
-            FilledButton(
-              onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+            if (!expired)
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: _cancelRide,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.grey.shade100,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          side: BorderSide(color: Colors.grey.shade400),
+                        ),
+                      ),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () =>
+                          Navigator.of(context).popUntil((r) => r.isFirst),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: const Text(
+                        'Done',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            else
+              FilledButton(
+                onPressed: _cancelRide,
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.grey.shade400,
+                  foregroundColor: Colors.black87,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                ),
               ),
-              child: Text(expired ? 'Back to map' : 'Done'),
-            ),
           ],
         ),
       ),
@@ -169,10 +227,7 @@ class _InfoCard extends StatelessWidget {
             style: const TextStyle(color: AppColors.textSecondary),
           ),
         ),
-        Text(
-          value,
-          style: const TextStyle(fontWeight: FontWeight.w700),
-        ),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w700)),
       ],
     );
   }
