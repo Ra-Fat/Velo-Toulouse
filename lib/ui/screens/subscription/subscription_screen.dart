@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../data/repositories/subscription/subscription_repository.dart';
 import '../../../data/repositories/user_subscription/user_subscription_repository.dart';
 import 'view_model/subscription_view_model.dart';
-import 'widgets/subscription_screen_content.dart';
+import 'subscription_selection_screen.dart';
 
 class SubscriptionScreen extends StatelessWidget {
   const SubscriptionScreen({super.key, this.onBackToMap});
@@ -19,7 +19,7 @@ class SubscriptionScreen extends StatelessWidget {
         userSubscriptionRepository: context.read<UserSubscriptionRepository>(),
         userId: '1',
       )..load(),
-      child: SubscriptionScreenContent(onBackToMap: onBackToMap),
+      child: SubscriptionSelectionScreen(onBackToMap: onBackToMap),
     );
   }
 }

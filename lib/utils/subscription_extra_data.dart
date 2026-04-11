@@ -1,6 +1,6 @@
-import '../../../../../models/subscription/subscription.dart';
+import '../../models/subscription/subscription.dart';
 
-class SubscriptionCopy {
+class SubscriptionExtraData {
   static String description(Subscription plan) {
     switch (plan.id) {
       case 'day':

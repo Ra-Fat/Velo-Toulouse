@@ -1,41 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:project/models/subscription/subscription.dart';
-import 'package:project/ui/screens/subscription/widgets/subscription_copy.dart';
 import 'package:project/ui/screens/subscription/widgets/subscription_selection/plan_card.dart';
 import 'package:project/utils/async_value.dart';
+import 'package:project/utils/subscription_extra_data.dart';
 
-class CatalogBody extends StatelessWidget {
-  const CatalogBody({
+class SubscriptionList extends StatelessWidget {
+  const SubscriptionList({
     super.key,
-    required this.catalog,
+    required this.subscriptions,
     required this.selected,
     required this.onSelect,
   });
 
-  final AsyncValue<List<Subscription>> catalog;
+  final AsyncValue<List<Subscription>> subscriptions;
   final Subscription? selected;
   final ValueChanged<Subscription> onSelect;
 
   @override
   Widget build(BuildContext context) {
-    switch (catalog.state) {
+    switch (subscriptions.state) {
       case AsyncValueState.loading:
         return const Center(child: CircularProgressIndicator());
       case AsyncValueState.error:
-        final err = catalog.error;
+        final err = subscriptions.error;
         return Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Text(
-              'Could not load plans.\n${err ?? 'Unknown error'}',
+              'Could not load subscriptions.\n${err ?? 'Unknown error'}',
               textAlign: TextAlign.center,
             ),
           ),
         );
       case AsyncValueState.success:
-        final plans = catalog.data ?? <Subscription>[];
+        final plans = subscriptions.data ?? <Subscription>[];
         if (plans.isEmpty) {
-          return const Center(child: Text('No plans available.'));
+          return const Center(child: Text('No subscriptions available.'));
         }
         return ListView.separated(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
@@ -46,9 +46,9 @@ class CatalogBody extends StatelessWidget {
             final isSelected = selected?.id == plan.id;
             return PlanCard(
               title: plan.name,
-              priceLabel: _euroPriceLabel(plan.priceEuros),
-              description: SubscriptionCopy.description(plan),
-              promoLine: SubscriptionCopy.promoLine(plan),
+              priceLabel: '€${plan.priceEuros.toStringAsFixed(2)}',
+              description: SubscriptionExtraData.description(plan),
+              promoLine: SubscriptionExtraData.promoLine(plan),
               selected: isSelected,
               onTap: () => onSelect(plan),
             );
@@ -56,11 +56,4 @@ class CatalogBody extends StatelessWidget {
         );
     }
   }
-}
-
-String _euroPriceLabel(double euros) {
-  if (euros == euros.roundToDouble()) {
-    return '€${euros.toStringAsFixed(0)}';
-  }
-  return '€${euros.toStringAsFixed(2)}';
 }

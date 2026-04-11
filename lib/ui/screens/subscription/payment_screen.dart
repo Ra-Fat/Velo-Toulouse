@@ -17,7 +17,6 @@ class PaymentScreen extends StatelessWidget {
   final Subscription subscription;
   final VoidCallback onBack;
 
-  /// When set, called after Pay — typically writes Firestore then refreshes subscription state.
   final Future<void> Function()? onPaymentSuccess;
 
   @override

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../theme/app_colors.dart';
 import '../../view_model/subscription_view_model.dart';
 import '../step_progress.dart';
-import 'catalog_body.dart';
+import 'subscription_list.dart';
 
-class SubscriptionsSelectionScreen extends StatelessWidget {
-  const SubscriptionsSelectionScreen({
+class SubscriptionSelectionContent extends StatelessWidget {
+  const SubscriptionSelectionContent({
     super.key,
     required this.onContinue,
     this.onBackToMap,
@@ -79,8 +78,8 @@ class SubscriptionsSelectionScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: CatalogBody(
-                catalog: state.catalog,
+              child: SubscriptionList(
+                subscriptions: state.catalog,
                 selected: state.selected,
                 onSelect: vm.select,
               ),

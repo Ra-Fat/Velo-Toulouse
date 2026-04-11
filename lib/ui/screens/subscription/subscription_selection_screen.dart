@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:project/ui/screens/subscription/widgets/payment/payment_screen.dart';
 import 'package:project/ui/screens/subscription/widgets/subscription_selection/active_subscription_view.dart';
-import 'package:project/ui/screens/subscription/widgets/subscription_selection/subscriptions_selection_screen.dart';
+import 'package:project/ui/screens/subscription/widgets/subscription_selection/subscription_selection_content.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../data/repositories/user_subscription/user_subscription_repository.dart';
-import '../../../../../models/subscription/subscription.dart';
-import '../../../../../models/user_subscription/user_subscription.dart';
-import '../view_model/subscription_view_model.dart';
+import '../../../../data/repositories/user_subscription/user_subscription_repository.dart';
+import '../../../../models/subscription/subscription.dart';
+import '../../../../models/user_subscription/user_subscription.dart';
+import 'view_model/subscription_view_model.dart';
 
-class SubscriptionScreenContent extends StatelessWidget {
-  const SubscriptionScreenContent({super.key, this.onBackToMap});
+class SubscriptionSelectionScreen extends StatelessWidget {
+  const SubscriptionSelectionScreen({super.key, this.onBackToMap});
 
   final VoidCallback? onBackToMap;
 
-  VoidCallback _buildOnContinue(
-    BuildContext context,
-    Subscription? selected,
-  ) {
+  VoidCallback _buildOnContinue(BuildContext context, Subscription? selected) {
     if (selected == null) return () {};
 
     return () {
@@ -93,7 +90,7 @@ class SubscriptionScreenContent extends StatelessWidget {
       );
     }
 
-    return SubscriptionsSelectionScreen(
+    return SubscriptionSelectionContent(
       key: const ValueKey('plans'),
       onContinue: _buildOnContinue(context, state.selected),
       onBackToMap: onBackToMap,
