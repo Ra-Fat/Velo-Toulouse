@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1089177983135",
+    "firebase_url": "https://class-8804f-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "class-8804f",
+    "storage_bucket": "class-8804f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089177983135:android:5ac7aa8136e2a16ca4aaaa",
+        "android_client_info": {
+          "package_name": "com.class8804f.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf_0SPDvRcFrrLOQANrZKjFMH7xXnKTbk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

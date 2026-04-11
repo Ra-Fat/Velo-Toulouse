@@ -8,19 +8,26 @@ import 'booking_repository.dart';
 
 class BookingRepositoryFirebase implements BookingRepository {
   BookingRepositoryFirebase({FirebaseFirestore? firestore})
-      : _db = firestore ?? FirebaseFirestore.instance;
+    : _db = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _db;
 
   Future<BookingDetails> _hydrateDetails(Booking booking) async {
-    final stationSnap =
-        await _db.collection(FirestorePaths.stations).doc(booking.stationId).get();
-    final bikeSnap =
-        await _db.collection(FirestorePaths.bikes).doc(booking.bikeId).get();
-    final slotSnap =
-        await _db.collection(FirestorePaths.slots).doc(booking.slotId).get();
+    final stationSnap = await _db
+        .collection(FirestorePaths.stations)
+        .doc(booking.stationId)
+        .get();
+    final bikeSnap = await _db
+        .collection(FirestorePaths.bikes)
+        .doc(booking.bikeId)
+        .get();
+    final slotSnap = await _db
+        .collection(FirestorePaths.slots)
+        .doc(booking.slotId)
+        .get();
 
-    final stationName = stationSnap.data()?['name'] as String? ?? booking.stationId;
+    final stationName =
+        stationSnap.data()?['name'] as String? ?? booking.stationId;
     final bikeNumber = bikeSnap.data()?['number'] as String? ?? booking.bikeId;
     final slotLabel = slotSnap.data()?['label'] as String? ?? booking.slotId;
 
@@ -37,15 +44,20 @@ class BookingRepositoryFirebase implements BookingRepository {
     final snapshot = await _db
         .collection(FirestorePaths.bookings)
         .where(BookingDto.userIdKey, isEqualTo: userId)
-        .orderBy(BookingDto.reservedAtKey, descending: true)
-        .limit(1)
         .get();
 
     if (snapshot.docs.isEmpty) return null;
 
-    final doc = snapshot.docs.single;
-    final booking = BookingDto.fromFirestore(doc.id, doc.data());
-    return _hydrateDetails(booking);
+    Booking? latest;
+    for (final doc in snapshot.docs) {
+      final booking = BookingDto.fromFirestore(doc.id, doc.data());
+      if (latest == null || booking.reservedAt.isAfter(latest.reservedAt)) {
+        latest = booking;
+      }
+    }
+
+    if (latest == null) return null;
+    return _hydrateDetails(latest);
   }
 
   @override
