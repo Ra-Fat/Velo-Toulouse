@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../view_model/map_view_model.dart';
-import '../station_bike_sheet.dart';
+import '../../bike/station_bike_sheet.dart';
 
 class StationSheetLayer extends StatelessWidget {
   const StationSheetLayer({

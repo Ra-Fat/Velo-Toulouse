@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:project/ui/screens/map/widgets/banner/active_booking_banner.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../../utils/async_value.dart';
-import '../../../view_model/booking_view_model.dart';
-import '../../../view_model/map_view_model.dart';
-import '../../booking/active_booking_banner.dart';
-import '../../booking/booking_timer_screen.dart';
+import '../../../../../utils/async_value.dart';
+import '../../view_model/booking_view_model.dart';
+import '../../view_model/map_view_model.dart';
+import 'booking_timer_content.dart';
 
 class BookingBannerLayer extends StatelessWidget {
   const BookingBannerLayer({super.key});
@@ -73,7 +73,7 @@ class _BookingOverlay extends StatelessWidget {
                 builder: (context) =>
                     ChangeNotifierProvider<BookingViewModel>.value(
                       value: vm,
-                      child: BookingTimerScreen(details: data),
+                      child: BookingTimerContent(details: data),
                     ),
               ),
             );

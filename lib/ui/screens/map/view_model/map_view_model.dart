@@ -128,17 +128,38 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<BookingDetails?> bookSelectedBike(
-    BookingViewModel bookingViewModel,
-  ) async {
+  // Future<BookingDetails?> bookSelectedBike(
+  //   BookingViewModel bookingViewModel,
+  // ) async {
+  //   final station = selectedStation;
+  //   final bike = selectedBike;
+  //   if (station == null || bike == null) return null;
+
+  //   return bookingViewModel.createBooking(
+  //     bikeId: bike.id,
+  //     stationId: station.id,
+  //     slotId: bike.currentSlotId,
+  //   );
+  // }
+
+  Future<BookingDetails?> createBookingFlow(BookingViewModel bookingVm) async {
     final station = selectedStation;
     final bike = selectedBike;
+
     if (station == null || bike == null) return null;
 
-    return bookingViewModel.createBooking(
+    return bookingVm.createBooking(
       bikeId: bike.id,
       stationId: station.id,
       slotId: bike.currentSlotId,
     );
+  }
+
+  void toggleStation(String stationId) {
+    if (_state.selectedStationId == stationId) {
+      selectStation(null);
+    } else {
+      selectStation(stationId);
+    }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:project/ui/theme/app_colors.dart';
+import 'package:project/ui/widget/primary_button.dart';
 
 class BookingTimerActions extends StatelessWidget {
   const BookingTimerActions({
@@ -21,16 +23,10 @@ class BookingTimerActions extends StatelessWidget {
       return Row(
         children: [
           Expanded(
-            child: FilledButton(
+            child: PrimaryButton(
               onPressed: isCancelling ? null : onCancel,
-              style: FilledButton.styleFrom(
-                backgroundColor: Colors.grey.shade100,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  side: BorderSide(color: Colors.grey.shade400),
-                ),
-              ),
+              enabled: !isCancelling,
+              backgroundColor: Colors.grey,
               child: const Text(
                 'Cancel',
                 style: TextStyle(
@@ -43,16 +39,9 @@ class BookingTimerActions extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: FilledButton(
+            child: PrimaryButton(
               onPressed: isCancelling ? null : onDone,
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
+              enabled: !isCancelling,
               child: const Text(
                 'Done',
                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
@@ -63,14 +52,10 @@ class BookingTimerActions extends StatelessWidget {
       );
     }
 
-    return FilledButton(
+    return PrimaryButton(
       onPressed: isCancelling ? null : onCancel,
-      style: FilledButton.styleFrom(
-        backgroundColor: Colors.grey.shade400,
-        foregroundColor: Colors.black87,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      ),
+      enabled: !isCancelling,
+      backgroundColor: Colors.grey,
       child: const Text(
         'Cancel',
         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),

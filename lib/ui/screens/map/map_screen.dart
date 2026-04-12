@@ -7,7 +7,7 @@ import '../../../data/repositories/booking/booking_repository.dart';
 import '../../../data/repositories/station/station_repository.dart';
 import 'view_model/booking_view_model.dart';
 import 'view_model/map_view_model.dart';
-import 'widgets/map/map_screen_content.dart';
+import 'widgets/map_screen_content.dart';
 
 class MapScreen extends StatelessWidget {
   const MapScreen({super.key});

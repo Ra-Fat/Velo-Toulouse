@@ -3,24 +3,25 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:project/models/booking/booking_details.dart';
 import 'package:project/ui/screens/map/view_model/booking_view_model.dart';
+import 'package:project/utils/format_date.dart';
 import 'package:provider/provider.dart';
 
 import 'booking_timer_widgets/booking_timer_actions.dart';
 import 'booking_timer_widgets/booking_timer_info_card.dart';
-import 'booking_timer_widgets/booking_timer_loading_overlay.dart';
+// booking_timer_loading_overlay.dart inlined below
 import 'booking_timer_widgets/booking_timer_status_card.dart';
 
-class BookingTimerScreen extends StatefulWidget {
-  const BookingTimerScreen({super.key, required this.details});
+class BookingTimerContent extends StatefulWidget {
+  const BookingTimerContent({super.key, required this.details});
 
   final BookingDetails details;
 
   @override
-  State<BookingTimerScreen> createState() => _BookingTimerScreenState();
+  State<BookingTimerContent> createState() => _BookingTimerScreenState();
 }
 
-class _BookingTimerScreenState extends State<BookingTimerScreen> {
-  static const Duration _reservationDuration = Duration(minutes: 15);
+class _BookingTimerScreenState extends State<BookingTimerContent> {
+  static const Duration _reservationDuration = Duration(minutes: 5);
   Timer? _timer;
   late Duration _remaining;
 
@@ -49,12 +50,6 @@ class _BookingTimerScreenState extends State<BookingTimerScreen> {
     final diff = expiresAt.difference(DateTime.now());
     if (diff.isNegative) return Duration.zero;
     return diff;
-  }
-
-  String _timeLabel(Duration d) {
-    final mm = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final ss = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$mm:$ss';
   }
 
   Future<void> _cancelRide(BookingViewModel viewModel) async {
@@ -95,7 +90,7 @@ class _BookingTimerScreenState extends State<BookingTimerScreen> {
               children: [
                 BookingTimerStatusCard(
                   expired: expired,
-                  timeLabel: _timeLabel(_remaining),
+                  timeLabel: timeLabel(_remaining),
                 ),
                 const SizedBox(height: 16),
                 BookingTimerInfoCard(
@@ -113,7 +108,7 @@ class _BookingTimerScreenState extends State<BookingTimerScreen> {
                       border: Border.all(color: Colors.orange.shade200),
                     ),
                     child: const Text(
-                      'Your reservation window ended. You can go back to the map to book another bike.',
+                      'Your reservation ended. You can go back to the map to book another bike.',
                     ),
                   ),
                 ],
@@ -128,7 +123,13 @@ class _BookingTimerScreenState extends State<BookingTimerScreen> {
               ],
             ),
           ),
-          if (isCancelling) const BookingTimerLoadingOverlay(),
+          if (isCancelling)
+            const Stack(
+              children: [
+                ModalBarrier(dismissible: false, color: Colors.black26),
+                Center(child: CircularProgressIndicator()),
+              ],
+            ),
         ],
       ),
     );

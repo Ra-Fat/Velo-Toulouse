@@ -22,6 +22,7 @@ class BookingViewModel extends ChangeNotifier {
 
   BookingState get state => _state;
 
+  // load latest booking for user
   Future<void> load() async {
     _state = _state.copyWith(details: AsyncValue<BookingDetails?>.loading());
     notifyListeners();
@@ -36,6 +37,7 @@ class BookingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // create a new booking
   Future<BookingDetails?> createBooking({
     required String bikeId,
     required String stationId,
@@ -67,6 +69,7 @@ class BookingViewModel extends ChangeNotifier {
     }
   }
 
+  // cancel the current booking
   Future<bool> cancelBooking(String bookingId) async {
     _state = _state.copyWith(
       createResult: AsyncValue<BookingDetails?>.loading(),

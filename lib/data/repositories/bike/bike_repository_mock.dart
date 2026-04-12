@@ -10,49 +10,49 @@ class BikeRepositoryMock implements BikeRepository {
     const Bike(
       id: '2',
       number: '1002',
-      status: 'available',
+      status: BikeStatus.available,
       currentStationId: '1',
       currentSlotId: '2',
     ),
     const Bike(
       id: '10',
       number: '4872',
-      status: 'available',
+      status: BikeStatus.available,
       currentStationId: '1',
       currentSlotId: '10',
     ),
     const Bike(
       id: '3',
       number: '1003',
-      status: 'available',
+      status: BikeStatus.available,
       currentStationId: '2',
       currentSlotId: '4',
     ),
     const Bike(
       id: '11',
       number: '5021',
-      status: 'available',
+      status: BikeStatus.available,
       currentStationId: '3',
       currentSlotId: '11',
     ),
     const Bike(
       id: '12',
       number: '5022',
-      status: 'available',
+      status: BikeStatus.available,
       currentStationId: '4',
       currentSlotId: '12',
     ),
     const Bike(
       id: '13',
       number: '5023',
-      status: 'available',
+      status: BikeStatus.available,
       currentStationId: '5',
       currentSlotId: '13',
     ),
     const Bike(
       id: '1',
       number: '1001',
-      status: 'reserved',
+      status: BikeStatus.reserved,
       currentStationId: '1',
       currentSlotId: '1',
     ),
@@ -61,10 +61,13 @@ class BikeRepositoryMock implements BikeRepository {
   @override
   Future<List<Bike>> fetchAvailableBikesForStation(String stationId) async {
     await Future<void>.delayed(artificialDelay);
+
     final list = _bikes
         .where((b) => b.currentStationId == stationId && b.isAvailable)
         .toList();
+
     list.sort((a, b) => a.number.compareTo(b.number));
+
     return list;
   }
 }

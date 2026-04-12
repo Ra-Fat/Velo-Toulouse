@@ -16,7 +16,7 @@ class BikeRepositoryFirebase implements BikeRepository {
     final snapshot = await _db
         .collection(FirestorePaths.bikes)
         .where(BikeDto.currentStationIdKey, isEqualTo: stationId)
-        .where(BikeDto.statusKey, isEqualTo: BikeDto.statusAvailable)
+        .where(BikeDto.statusKey, isEqualTo: 'available')
         .get();
 
     final list = snapshot.docs.map(BikeDto.fromFirestore).toList();

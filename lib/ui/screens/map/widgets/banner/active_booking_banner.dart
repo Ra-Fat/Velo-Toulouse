@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../models/booking/booking_details.dart';
-import '../../../theme/app_colors.dart';
-import '../../../../utils/format_date.dart';
+import '../../../../../models/booking/booking_details.dart';
+import '../../../../theme/app_colors.dart';
+import '../../../../../utils/format_date.dart';
 
 class ActiveBookingBanner extends StatelessWidget {
   const ActiveBookingBanner({

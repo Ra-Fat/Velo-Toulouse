@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project/utils/plan_duration.dart';
-
-import '../../../models/subscription/subscription.dart';
-import '../../theme/app_colors.dart';
-import 'widgets/payment/reciept_card.dart';
-import 'widgets/step_progress.dart';
+import 'package:project/ui/screens/subscription/widgets/header/subscription_header.dart';
+import '../../../../models/subscription/subscription.dart';
+import '../../../theme/app_colors.dart';
+import '../../../../utils/plan_duration.dart';
+import 'header/step_progress.dart';
+import 'payment/reciept_card.dart';
 
 class PaymentScreen extends StatelessWidget {
   const PaymentScreen({
@@ -17,6 +17,7 @@ class PaymentScreen extends StatelessWidget {
   final Subscription subscription;
   final VoidCallback onBack;
 
+  /// When set, called after Pay — typically writes Firestore then refreshes subscription state.
   final Future<void> Function()? onPaymentSuccess;
 
   @override
@@ -33,39 +34,10 @@ class PaymentScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      size: 20,
-                    ),
-                    onPressed: onBack,
-                    color: Colors.black87,
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Payment',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Text(
-                      '2 of 2',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            SubscriptionHeader(
+              title: 'Payment',
+              stepText: '2 of 2',
+              onBack: onBack,
             ),
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 8),

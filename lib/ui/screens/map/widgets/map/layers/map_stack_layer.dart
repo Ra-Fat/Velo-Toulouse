@@ -13,11 +13,16 @@ class MapStackLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mapVm = context.watch<MapViewModel>();
-    final stations = mapVm.state.stations;
+    final stationsAsync = context.select(
+      (MapViewModel vm) => vm.state.stations,
+    );
 
-    final stationList = switch (stations.state) {
-      AsyncValueState.success => stations.data ?? <Station>[],
+    final selectedStationId = context.select(
+      (MapViewModel vm) => vm.state.selectedStationId,
+    );
+
+    final stationList = switch (stationsAsync.state) {
+      AsyncValueState.success => stationsAsync.data ?? <Station>[],
       AsyncValueState.loading => <Station>[],
       AsyncValueState.error => <Station>[],
     };
@@ -34,6 +39,7 @@ class MapStackLayer extends StatelessWidget {
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.velo.toulouse.app',
         ),
+
         MarkerLayer(
           markers: [
             for (final station in stationList)
@@ -43,22 +49,19 @@ class MapStackLayer extends StatelessWidget {
                 height: 36,
                 child: MapStationPin(
                   count: station.availableBikesCount,
-                  selected: mapVm.state.selectedStationId == station.id,
+                  selected: selectedStationId == station.id,
                   onTap: () {
-                    final selected =
-                        mapVm.state.selectedStationId == station.id;
-                    if (selected) {
-                      mapVm.selectStation(null);
-                    } else {
-                      mapVm.selectStation(station.id);
-                    }
+                    context.read<MapViewModel>().toggleStation(station.id);
                   },
                 ),
               ),
           ],
         ),
+
         const RichAttributionWidget(
-          attributions: [TextSourceAttribution('OpenStreetMap contributors')],
+          attributions: [
+            TextSourceAttribution('OpenStreetMap contributors'),
+          ],
         ),
       ],
     );
