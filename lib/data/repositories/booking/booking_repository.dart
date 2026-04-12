@@ -9,4 +9,6 @@ abstract class BookingRepository {
     required String stationId,
     required String slotId,
   });
+
+  Future<void> cancelBooking(String bookingId);
 }

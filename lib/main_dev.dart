@@ -67,7 +67,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (_useFirebase) {
-    print('Using Firebase repositories');
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );

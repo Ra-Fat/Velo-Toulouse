@@ -1,13 +1,16 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../../services/app_session.dart';
 import '../../../../data/repositories/booking/booking_repository.dart';
 import '../../../../models/booking/booking_details.dart';
 import '../../../states/booking_state.dart';
-import '../../../utils/async_value.dart';
+import '../../../../utils/async_value.dart';
 
 class BookingViewModel extends ChangeNotifier {
-  BookingViewModel({required BookingRepository repository, this.userId = '1'})
-    : _repository = repository;
+  BookingViewModel({
+    required BookingRepository repository,
+    this.userId = AppSession.userId,
+  }) : _repository = repository;
 
   final BookingRepository _repository;
   final String userId;
@@ -19,6 +22,7 @@ class BookingViewModel extends ChangeNotifier {
 
   BookingState get state => _state;
 
+  // load latest booking for user
   Future<void> load() async {
     _state = _state.copyWith(details: AsyncValue<BookingDetails?>.loading());
     notifyListeners();
@@ -33,6 +37,7 @@ class BookingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // create a new booking
   Future<BookingDetails?> createBooking({
     required String bikeId,
     required String stationId,
@@ -61,6 +66,31 @@ class BookingViewModel extends ChangeNotifier {
       );
       notifyListeners();
       return null;
+    }
+  }
+
+  // cancel the current booking
+  Future<bool> cancelBooking(String bookingId) async {
+    _state = _state.copyWith(
+      createResult: AsyncValue<BookingDetails?>.loading(),
+    );
+    notifyListeners();
+    try {
+      await _repository.cancelBooking(bookingId);
+      final result = await _repository.fetchLatestBookingDetails(userId);
+      _state = _state.copyWith(
+        details: AsyncValue<BookingDetails?>.success(result),
+        createResult: AsyncValue<BookingDetails?>.success(null),
+      );
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _state = _state.copyWith(
+        createResult: AsyncValue<BookingDetails?>.error(e),
+      );
+      notifyListeners();
+      debugPrint('Error cancelling booking: $e');
+      return false;
     }
   }
 }

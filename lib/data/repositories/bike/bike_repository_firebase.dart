@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../core/firestore_paths.dart';
+import '../../../utils/firestore_paths.dart';
 import '../../../models/bike/bike.dart';
 import '../../dtos/bike_dto.dart';
 import 'bike_repository.dart';
@@ -16,7 +16,7 @@ class BikeRepositoryFirebase implements BikeRepository {
     final snapshot = await _db
         .collection(FirestorePaths.bikes)
         .where(BikeDto.currentStationIdKey, isEqualTo: stationId)
-        .where(BikeDto.statusKey, isEqualTo: BikeDto.statusAvailable)
+        .where(BikeDto.statusKey, isEqualTo: 'available')
         .get();
 
     final list = snapshot.docs.map(BikeDto.fromFirestore).toList();

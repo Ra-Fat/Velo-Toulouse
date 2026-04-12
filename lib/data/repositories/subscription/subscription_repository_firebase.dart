@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../core/firestore_paths.dart';
+import '../../../utils/firestore_paths.dart';
 import '../../../models/subscription/subscription.dart';
 import '../../dtos/subscription_dto.dart';
 import 'subscription_repository.dart';

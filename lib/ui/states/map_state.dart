@@ -1,6 +1,6 @@
 import 'package:project/models/bike/bike.dart';
 import 'package:project/models/station/station.dart';
-import 'package:project/ui/utils/async_value.dart';
+import 'package:project/utils/async_value.dart';
 
 class MapState {
   const MapState({

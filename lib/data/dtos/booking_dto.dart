@@ -8,11 +8,9 @@ class BookingDto {
   static const String stationIdKey = 'station_id';
   static const String slotIdKey = 'slot_id';
   static const String reservedAtKey = 'reserved_at';
+  static const String isActiveKey = 'is_active';
 
-  static Booking fromFirestore(
-    String id,
-    Map<String, dynamic> data,
-  ) {
+  static Booking fromFirestore(String id, Map<String, dynamic> data) {
     final reservedRaw = data[reservedAtKey];
     if (reservedRaw is! Timestamp) {
       throw FormatException('booking.$reservedAtKey must be Timestamp');
@@ -23,6 +21,7 @@ class BookingDto {
       bikeId: data[bikeIdKey] as String,
       stationId: data[stationIdKey] as String,
       slotId: data[slotIdKey] as String,
+      isActive: data[isActiveKey] as bool? ?? true,
       reservedAt: reservedRaw.toDate(),
     );
   }

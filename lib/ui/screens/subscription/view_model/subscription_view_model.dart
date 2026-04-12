@@ -1,17 +1,18 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../../services/app_session.dart';
 import '../../../../data/repositories/subscription/subscription_repository.dart';
 import '../../../../data/repositories/user_subscription/user_subscription_repository.dart';
 import '../../../../models/subscription/subscription.dart';
 import '../../../../models/user_subscription/user_subscription.dart';
 import '../../../states/subscription_state.dart';
-import '../../../utils/async_value.dart';
+import '../../../../utils/async_value.dart';
 
 class SubscriptionViewModel extends ChangeNotifier {
   SubscriptionViewModel({
     required SubscriptionRepository subscriptionRepository,
     required UserSubscriptionRepository userSubscriptionRepository,
-    this.userId = '1',
+    this.userId = AppSession.userId,
   })  : _subscriptionRepository = subscriptionRepository,
         _userSubscriptionRepository = userSubscriptionRepository;
 

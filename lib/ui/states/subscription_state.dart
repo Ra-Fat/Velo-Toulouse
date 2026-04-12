@@ -1,6 +1,6 @@
 import 'package:project/models/subscription/subscription.dart';
 import 'package:project/models/user_subscription/user_subscription.dart';
-import 'package:project/ui/utils/async_value.dart';
+import 'package:project/utils/async_value.dart';
 
 class SubscriptionState {
   const SubscriptionState({

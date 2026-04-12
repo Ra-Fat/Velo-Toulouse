@@ -1,3 +1,4 @@
+import '../../../services/app_session.dart';
 import '../../../models/booking/booking.dart';
 import '../../../models/booking/booking_details.dart';
 import 'booking_repository.dart';
@@ -10,11 +11,12 @@ class BookingRepositoryMock implements BookingRepository {
   static final BookingDetails _seedUser1 = BookingDetails(
     booking: Booking(
       id: 'mock-booking-1',
-      userId: '1',
+      userId: AppSession.userId,
       bikeId: '1',
       stationId: '1',
       slotId: '1',
       reservedAt: DateTime.utc(2026, 4, 5, 12, 0),
+      isActive: true,
     ),
     stationName: 'Capitole Main',
     bikeNumber: '1001',
@@ -22,6 +24,7 @@ class BookingRepositoryMock implements BookingRepository {
   );
 
   final Map<String, BookingDetails> _latestByUser = <String, BookingDetails>{
+    AppSession.userId: _seedUser1,
   };
 
   @override
@@ -47,6 +50,7 @@ class BookingRepositoryMock implements BookingRepository {
         bikeId: bikeId,
         stationId: stationId,
         slotId: slotId,
+        isActive: true,
         reservedAt: now,
       ),
       stationName: _stationName(stationId),
@@ -55,6 +59,31 @@ class BookingRepositoryMock implements BookingRepository {
     );
     _latestByUser[userId] = details;
     return details;
+  }
+
+  @override
+  Future<void> cancelBooking(String bookingId) async {
+    await Future<void>.delayed(artificialDelay);
+
+    for (final entry in _latestByUser.entries) {
+      if (entry.value.booking.id == bookingId) {
+        _latestByUser[entry.key] = BookingDetails(
+          booking: Booking(
+            id: entry.value.booking.id,
+            userId: entry.value.booking.userId,
+            bikeId: entry.value.booking.bikeId,
+            stationId: entry.value.booking.stationId,
+            slotId: entry.value.booking.slotId,
+            isActive: false,
+            reservedAt: entry.value.booking.reservedAt,
+          ),
+          stationName: entry.value.stationName,
+          bikeNumber: entry.value.bikeNumber,
+          slotLabel: entry.value.slotLabel,
+        );
+        break;
+      }
+    }
   }
 
   String _stationName(String stationId) {

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../core/firestore_paths.dart';
-import '../../../core/subscription_enums.dart';
+import '../../../utils/firestore_paths.dart';
+import '../../../utils/subscription_enums.dart';
 import '../../../models/user_subscription/user_subscription.dart';
 import '../../dtos/subscription_dto.dart';
 import '../../dtos/user_subscription_dto.dart';
