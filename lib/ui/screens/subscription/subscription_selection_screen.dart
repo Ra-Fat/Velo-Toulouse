@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/screens/subscription/widgets/payment/payment_screen.dart';
+import 'package:project/ui/screens/subscription/payment_screen.dart';
 import 'package:project/ui/screens/subscription/widgets/subscription_selection/active_subscription_view.dart';
 import 'package:project/ui/screens/subscription/widgets/subscription_selection/subscription_selection_content.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/app_session.dart';
-import '../../../../data/repositories/user_subscription/user_subscription_repository.dart';
 import '../../../../models/subscription/subscription.dart';
 import '../../../../models/user_subscription/user_subscription.dart';
 import 'view_model/subscription_view_model.dart';
@@ -15,7 +13,11 @@ class SubscriptionSelectionScreen extends StatelessWidget {
 
   final VoidCallback? onBackToMap;
 
-  VoidCallback _buildOnContinue(BuildContext context, Subscription? selected) {
+  VoidCallback _buildOnContinue(
+    BuildContext context,
+    SubscriptionViewModel vm,
+    Subscription? selected,
+  ) {
     if (selected == null) return () {};
 
     return () {
@@ -26,12 +28,7 @@ class SubscriptionSelectionScreen extends StatelessWidget {
             subscription: picked,
             onBack: () => Navigator.of(paymentContext).pop(),
             onPaymentSuccess: () async {
-              final repo = context.read<UserSubscriptionRepository>();
-              await repo.recordSubscriptionPurchase(
-                userId: AppSession.userId,
-                subscriptionId: picked.id,
-              );
-              await context.read<SubscriptionViewModel>().load();
+              await vm.completePurchaseAfterPayment(picked);
               if (!context.mounted) return;
               Navigator.of(paymentContext).pop();
               onBackToMap?.call();
@@ -93,7 +90,7 @@ class SubscriptionSelectionScreen extends StatelessWidget {
 
     return SubscriptionSelectionContent(
       key: const ValueKey('plans'),
-      onContinue: _buildOnContinue(context, state.selected),
+      onContinue: _buildOnContinue(context, vm, state.selected),
       onBackToMap: onBackToMap,
     );
   }

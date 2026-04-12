@@ -59,6 +59,15 @@ class SubscriptionViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Called after the payment UI succeeds; persists the purchase and reloads catalog + active pass.
+  Future<void> completePurchaseAfterPayment(Subscription subscription) async {
+    await _userSubscriptionRepository.recordSubscriptionPurchase(
+      userId: userId,
+      subscriptionId: subscription.id,
+    );
+    await load();
+  }
+
   static Subscription? _pickDefaultSelection(
     List<Subscription> catalog,
     Subscription? current,

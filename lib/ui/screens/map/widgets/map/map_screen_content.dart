@@ -24,7 +24,7 @@ class MapScreenContent extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           const MapStackLayer(),
-          const MapSearchBar(),
+          // const MapSearchBar(),
           StationSheetLayer(
             onBook: () async {
               final nav = Navigator.of(context);
